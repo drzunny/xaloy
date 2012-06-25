@@ -1,7 +1,8 @@
 local xbuild = require("xaloy-build")
 local xparse = require("xaloy-parse")
-local xresult = require("xaloy-html")
+local xio = require("xaloy-io")
 local xtest = require("xaloy-testing")
+local xhelper = require("xaloy-other")
 
 -- initalize the xaloy
 local xaloy = {}
@@ -9,6 +10,14 @@ local xaloy = {}
 ---	create a x-test object
 --- [n: test name]
 xaloy.create = function(n)
+	if xhelper == nil then
+		print("xaloy has not initalized\n")
+		return
+	end
+	if xhelper.check_hashempty(n) then
+		print("cannot use a empty test name\n")
+		return
+	end
 	if n ~= '' then
 		local x = {}
 		x.name = n
@@ -19,7 +28,7 @@ end
 ---	compile the generate test code created by xdef file and library as lua extension.
 --- [xobj: x-test object,  xdef: xdef file's path, ltype: library type, lpath: library path]
 xaloy.build = function(xobj, xdef, ltype, lpath)
-	if xobj == nil or type(xobj) ~= "table" then
+	if  not xhelper.check_xobject(xobj) then
 		print("invalid xaloy test object\n")
 		return
 	end
@@ -28,46 +37,59 @@ xaloy.build = function(xobj, xdef, ltype, lpath)
 		return
 	end	
 	local gen_code = xbuild.generate(xdef, ltype, lpath)
-	-- create a test cpp code	
-	local filename = xobj.name .. '_test_module.cc'
-	xresult.writefile(filename, gen_code);
+	-- create a test cpp code		
+	xio.writefile(gen_code);
 	
 	-- compile the generate code in a shared library
 	local build_ret = xbuild.compile(filename, "shared");
-	if build_ret.success then
-		xobj.cases = xparse.parse('lib'..xobj.name..'_test.xlib');		
-	else
-		print(build_ret.msg);
+	if not build_ret.success then
+		print(build_ret.msg)		
 	end
+	xobj.cases = xparse.parse(xobj)
 end
 
 --- test by assert
 --- [xobj: x-test object]
-xaloy.assert = function(xobj)
-	xobj.asrt_test_result = {}
+xaloy.assert = function(xobj, hidden_output)
+	xobj.assert_result = {}
+	if not xhelper.check_xobject(xobj) then
+		print("invalid xaloy test object\n")
+		return
+	end
 	for i,v in ipairs(xobj.cases) do
-		xobj.asrt_test_result[i] = xtest.assert_test(v);
+		xobj.assert_result[i] = xtest.assert_test(v);
+	end
+	if not hidden_output then
+		xio.present(xobj.assert_result, nil)
 	end
 end
 
 --- run a performance test
 --- [xobj: x-test object]
-xaloy.performance = function(xobj)
-	xobj.perf_test_result = {}
+xaloy.performance = function(xobj,hidden_output)	
+	if not xhelper.check_xobject(xobj) then
+		print("invalid xaloy test object\n")
+		return
+	end
+	xobj.per_result = {}
 	for i,v in ipairs(xobj.cases) do
-		xobj.perf_test_result[i] = xtest.performance_test(v);
+		xobj.per_result[i] = xtest.performance_test(v);
+	end
+	if not hidden_output then
+		xio.present(nil, xobj.per_result)
 	end
 end
 
 ---	run assert and performance test
 --- [xobj: x-test object]
 xaloy.test = function(xobj)
-	if xobj == nil or type(xobj) ~= "table" then
+	if not xhelper.check_xobject(xobj) then
 		print("invalid xaloy test object\n")
 		return
 	end
-	xaloy.assert(xobj)
-	xaloy.performance(xobj);
+	xaloy.assert(xobj, true)
+	xaloy.performance(xobj, true);
+	xio.present(xobj.assert_result, xobj.performance_result)
 end
 
 --- release the x-object
@@ -94,7 +116,7 @@ xaloy.gtest.build = function(xobj, xdef, ltype, lpath)
 	end	
 	local gtest_code = xbuild.gtest_generate(xdef, ltype, lpath)
 	local code_file = string.format("gtest_%s.cc", xobj.name)
-	xresult.writefile(code_file, gtest_code)
+	xio.writefile(code_file, gtest_code)
 	local build_ret = xbuild.compile(code_file, "shared")
 	if build_ret.success then
 		xobj.g_cases = xparse.gtest_parse("lib_gtest_"..xobj.name.."test.glib")		
@@ -104,13 +126,42 @@ xaloy.gtest.build = function(xobj, xdef, ltype, lpath)
 	end
 end
 
-xaloy.gtest.assert = function(xobj)
+xaloy.gtest.assert = function(xobj, hidden_output)
+	if not xhelper.check_xobject(xobj) then
+		print("invalid xaloy test object\n")
+		return
+	end
+	xobj.g_assert_result = {}
+	for i,v in ipairs(xobj.g_cases) do
+		xobj.g_assert_result[i] = xtest.g_assert_test(v);
+	end
+	if not hidden_output then
+		xio.g_present(xobj.g_assert_result, nil)
+	end
 end
 
-xaloy.gtest.performance = function(xobj)
+xaloy.gtest.performance = function(xobj, hidden_output)
+	if not xhelper.check_xobject(xobj) then
+		print("invalid xaloy test object\n")
+		return
+	end
+	xobj.g_per_result = {}
+	for i,v in ipairs(xobj.g_cases) do
+		xobj.g_per_result[i] = xtest.g_performance_test(v);
+	end
+	if not hidden_output then
+		xio.g_present(nil, xobj.g_per_result)
+	end
 end
 
 xaloy.gtest.test = function(xobj)
+	if not xhelper.check_xobject(xobj) then
+		print("invalid xaloy test object\n")
+		return
+	end
+	xaloy.gtest.assert(xobj, true)
+	xaloy.gtest.performance(xobj, true);
+	xio.g_present(xobj.g_assert_result, xobj.g_per_result)
 end
 
 -------- return the xaloy object -------------
