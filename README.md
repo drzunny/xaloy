@@ -1,6 +1,6 @@
 Xaloy Test Framework
 =====
-Xaloy测试框架是为Quab而设的一款自动化测试工具。致力于简化Quab的测试流程。希望Xaloy以后能够成为一款通用的测试工具～
+Xaloy测试框架是为Quab而设的一款C/C++类库的自动化测试工具。致力于简化Quab的测试流程。希望Xaloy以后能够成为一款通用的测试工具～
 
 Xaloy的将会使用到下面的开源库
 
