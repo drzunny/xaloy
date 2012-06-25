@@ -11,7 +11,7 @@ end
 
 -- check empty string
 helper.check_hasempty = function(...)
-	for i, v in iparis(arg) do
+	for i, v in ipairs({...}) do
 		if v==nil then
 			return true
 		end
@@ -19,8 +19,11 @@ helper.check_hasempty = function(...)
 		str = string.gsub(str, "(%S*)%s*$", "%1")		
 		if string.len(str) == 0 then
 			return true
+		end
 	end
 	return false
 end
 
+
+--------------- helper finish  ---------------
 return helper

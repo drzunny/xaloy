@@ -2,25 +2,25 @@ local xbuild = require("xaloy-build")
 local xparse = require("xaloy-parse")
 local xio = require("xaloy-io")
 local xtest = require("xaloy-testing")
-local xhelper = require("xaloy-other")
+local xhelper = require("xaloy-helper")
 
 -- initalize the xaloy
-local xaloy = {}
+xaloy = {}
 
 ---	create a x-test object
 --- [n: test name]
-xaloy.create = function(n)
+xaloy.create = function(name)
 	if xhelper == nil then
 		print("xaloy has not initalized\n")
 		return
 	end
-	if xhelper.check_hashempty(n) then
+	if xhelper.check_hasempty(name) then
 		print("cannot use a empty test name\n")
 		return
 	end
-	if n ~= '' then
+	if name ~= '' then
 		local x = {}
-		x.name = n
+		x.name = name
 		return x
 	end
 end
