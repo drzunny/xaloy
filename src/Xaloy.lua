@@ -41,9 +41,9 @@ xaloy.build = function(xobj, xdef, ltype, lpath)
 	xio.writefile(gen_code);
 	
 	-- compile the generate code in a shared library
-	local build_ret = xbuild.compile(filename, "shared");
-	if not build_ret.success then
-		print(build_ret.msg)		
+	local rs = xbuild.compile(filename, "shared");
+	if not rs.success then
+		print(rs.msg)		
 	end
 	xobj.cases = xparse.parse(xobj)
 end
@@ -99,7 +99,7 @@ xaloy.drop = function(xobj)
 	xobj = nil	
 	collectgarbage("collect")
 	cnt = cnt - collectgarbage("count")
-	print("xaloy test object release.(release memory: %d)", cnt)
+	print(string.format("xaloy test object has been release.(release memory: %d)", cnt))
 end
 
 
@@ -117,9 +117,9 @@ xaloy.gtest.build = function(xobj, xdef, ltype, lpath)
 	local gtest_code = xbuild.gtest_generate(xdef, ltype, lpath)
 	local code_file = string.format("gtest_%s.cc", xobj.name)
 	xio.writefile(code_file, gtest_code)
-	local build_ret = xbuild.compile(code_file, "shared")
-	if build_ret.success then
-		xobj.g_cases = xparse.gtest_parse("lib_gtest_"..xobj.name.."test.glib")		
+	local rs = xbuild.compile(code_file, "shared")
+	if rs.success then
+		xobj.g_cases = xparse.gtest_parse(xobj)		--- load file according the testname
 	else
 		xobj.g_cases = nil
 		print("cannot compile as a gtest module\n");

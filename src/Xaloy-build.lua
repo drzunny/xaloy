@@ -2,10 +2,15 @@ local xhelper = require("xaloy-helper")
 
 local xaloy_builder = {}
 
-xaloy_builder.generate = function(xdef, ltype, lpath)
+xaloy_builder.generate = function(xdef, ltype, lpath
+	local _testcase = dofile(xdef);
+	 for i, v in ipairs(_testcase) do
+			
+	 end
 end
 
 xaloy_builder.compile = function(file, stype)
+	
 end
 
 xaloy_builder.gtest_generate = function(xdef, ltype, lpath)

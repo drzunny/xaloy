@@ -24,6 +24,13 @@ helper.check_hasempty = function(...)
 	return false
 end
 
+helper.get_writer = function(path, mode)
+	if mode == 'text' or mode == 'binary' then
+		return io.open(path,"wb")
+	else
+		return io.open(path, "w")
+	end	
+end
 
 --------------- helper finish  ---------------
 return helper
