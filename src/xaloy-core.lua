@@ -12,10 +12,10 @@ xcore.env = require("xaloy-core-env")
 xcore.log = require("xaloy-core-log")
 
 -- module's methods
-xcore.parseObj = function(xdef)
+xcore.build = function(xdef)
 end
 
-xcore.parseFile = function(xdef)
+xcore.load= function(xdef)
 end
 
 xcore.createHTML = function(xcase, xresult)

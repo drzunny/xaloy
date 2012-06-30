@@ -26,11 +26,12 @@ xaloy.create = function(name)
 end
 
 xaloy.bind= function(xobj, xdef)
-	if type(xdef) == "table" then
-		xobj = xaloy.core.parseObject(xdef)
-	elseif type(xdef) == "string" then
-		xobj = xaloy.core.parseFile(xdef)
-	end
+	--if type(xdef) == "table" then
+	--	xobj = xaloy.core.parseObject(xdef)
+	--elseif type(xdef) == "string" then
+	--	xobj = xaloy.core.parseFile(xdef)
+	--end
+	-- 检查后缀名，如果是library则先build后load
 end
 
 xaloy.assert = function(xobj)
