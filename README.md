@@ -8,7 +8,7 @@ Xaloy的将会使用到下面的开源库
 
 + lua 5.2
 + google test framework
-
++ swig
 
 但是Xaloy **不会** 在这里的源码里面提供这些库
 
