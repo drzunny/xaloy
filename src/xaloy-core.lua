@@ -7,8 +7,8 @@
 local xcore = {}
 local op_reference = {EQ ="EQ", NE = "NE", LS = "LS", LE = "LE", GT = "GT", GE = "GE"}
 -- initalize the core modules
-xcore.bind = require("xaloy-core-bind")
 xcore.env = require("xaloy-core-env")
+xcore.bind = require("xaloy-core-bind")
 xcore.log = require("xaloy-core-log")
 xcore.cmp = require("xaloy-core-compare")
 
@@ -48,7 +48,7 @@ xcore.checkobj = function(xobj, mode)
 	return true
 end
 
-xcore.assert = function(mode, xf, case, expect)
+xcore.assert = function(name, mode, xf, case, expect)
 	mode = string.upper(mode)
 	local op = op_reference[mode]
 	local idx = ''
@@ -56,29 +56,25 @@ xcore.assert = function(mode, xf, case, expect)
 	if op == nil then
 		xcore.log.message("undefined operation")
 		return nil
-	end
+	end	
 	for i, v in ipairs(case) do		
-		local metafunction = nil
-		local params = nil
-		if _VERSION == "Lua 5.2" then						
-			metafunction = load("return xcore.cmp." .. op .."(xf(unpack(v)), expect[i])")
-		else
-			metafunction = loadstring("return xcore.cmp." .. op .."(xf(unpack(v)), expect[i])")
-		end		
+		local cmp_rs = nil	
+		cmp_rs = xcore.cmp[op](xf(unpack(v)), expect[i])	
 		
-		if metafunction() ~= true then
-			idx = idx .. i
+		if cmp_rs ~= true then
+			idx = idx .. i .. ","
 		end		
 	end
 	
 	if string.len(idx) > 0 then
-		msg = string.format("Assert Fail. (MODE:%s, Fail Test case Index:%s)", mode, idx)
+		idx = string.sub(idx, 0, string.len(idx) - 1)
+		msg = string.format("'" .. name .."' Assert Fail.    (MODE:%s, Fail Test case Index:%s)", mode, idx)
 		xcore.log.error(msg)
-		return {success = false, message = msg}
+		return {tname = name, success = false, message = msg}
 	else
-		msg = string.format("Assert Success,(MODE:%s)", mode)
+		msg = string.format("'" .. name .."' Assert Success. (MODE:%s)", mode)
 		xcore.log.ok(msg)		
-		return {success = true, message = msg}
+		return {tname = name, success = true, message = msg}
 	end	
 end
 
@@ -87,7 +83,7 @@ xcore.performance = function(name, xf, case, cycle, ltime, lspace)
 	if type(case) ~= "table" then
 		msg = "case must be a table"
 		xcore.log.error(msg)
-		return {success = false, message = msg}
+		return {tname = name, success = false, message = msg}
 	end
 	local cost = xcore.env.timer(
 		function()
@@ -100,18 +96,18 @@ xcore.performance = function(name, xf, case, cycle, ltime, lspace)
 	if ltime == nil and lspace == nil then
 		msg = string.format("function:%s   cost time:%d", name, cost)
 		xcore.log.ok(msg)
-		return {success = true, message = msg}		
+		return {tname = name, success = true, message = msg}		
 	end
 	
 	if type(ltime) == "number" then
 		if cost <= ltime then
 			msg = string.format("function:%s   limit time:%d   cost time:%d, PASS", name, ltime, cost)
 			xcore.log.ok(msg)
-			return {success = true, message = msg}	
+			return {tname = name, success = true, message = msg}	
 		else
 			msg = string.format("function:%s   limit time:%d   cost time:%d, FAIL", name, ltime, cost)
 			xcore.log.error(msg)
-			return {success = false, message = msg}	
+			return {tname = name, success = false, message = msg}	
 		end
 	end	
 end

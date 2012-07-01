@@ -23,9 +23,9 @@ end
 
 xaloy.bind= function(xobj, xdef)
 	if type(xdef) == "table" then
-		xobj = xaloy.core.parseObject(xdef)
+		xobj.xcase = xaloy.core.parseObject(xdef)
 	elseif type(xdef) == "string" then
-		xobj = xaloy.core.parseFile(xdef)
+		xobj.xcase = xaloy.core.parseFile(xdef)
 	end	
 end
 
@@ -36,19 +36,19 @@ xaloy.assert = function(xobj)
 		return
 	end
 	xobj.result.ASSERT_RESULT = {}
-	for i, v in ipairs(xobj.xcases) do
-		xobj.result.ASSERT_RESULT[idx] = xaloy.core.assert(v.mode, v.f, v.cases, v.expect)
+	for i, v in ipairs(xobj.xcase) do
+		xobj.result.ASSERT_RESULT[idx] = xaloy.core.assert(v.name, v.mode, v.f, v.case, v.expect)
 	end	
 end
 
-xaloy.performance = function(xobj)
+xaloy.performance = function(xobj, tmpcase)
 	-- check object type
 	if not xaloy.core.checkobj(xobj, "performance") then
 		return
 	end
 	xobj.result.PERFORMANCE_RESULT = {}
-	for i, v in ipairs(xobj.xcases) do
-		xobj.result.PERFORMANCE_RESULT[i] = xaloy.core.performance(v.f, v.cycle, v.ltime, v.lspace)
+	for i, v in ipairs(xobj.xcase) do
+		xobj.result.PERFORMANCE_RESULT[i] = xaloy.core.performance(v.name, v.f, tmpcase, v.cycle, v.ltime, v.lspace)
 	end	
 end
 
@@ -69,4 +69,4 @@ xaloy.releaseObj = function(xobj)
 end
 
 -------------------- xaloy's google test framework extension --------------------
-xaloy.gtest = require("xaloy-gtest")
+--xaloy.gtest = require("xaloy-gtest")
