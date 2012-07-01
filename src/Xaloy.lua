@@ -43,7 +43,7 @@ end
 
 xaloy.performance = function(xobj)
 	-- check object type
-	if not xaloy.core.checkobj(xobj, "performance")
+	if not xaloy.core.checkobj(xobj, "performance") then
 		return
 	end
 	xobj.result.PERFORMANCE_RESULT = {}
