@@ -11,14 +11,10 @@ xaloy = {}
 xaloy.core = require("xaloy-core")
 
 -------------------- xaloy's API --------------------
-xaloy.init = function()
-	-- check xaloy's status
-end
-
 xaloy.create = function(name)
 	local xobject = {}
 	xobject.name = name
-	xobject.case = {}
+	xobject.xcase = {}	
 	xobject.result = {}
 	xobject.success = false
 	xobject.finished = false
@@ -26,12 +22,11 @@ xaloy.create = function(name)
 end
 
 xaloy.bind= function(xobj, xdef)
-	--if type(xdef) == "table" then
-	--	xobj = xaloy.core.parseObject(xdef)
-	--elseif type(xdef) == "string" then
-	--	xobj = xaloy.core.parseFile(xdef)
-	--end
-	-- 检查后缀名，如果是library则先build后load
+	if type(xdef) == "table" then
+		xobj = xaloy.core.parseObject(xdef)
+	elseif type(xdef) == "string" then
+		xobj = xaloy.core.parseFile(xdef)
+	end	
 end
 
 xaloy.assert = function(xobj)
@@ -41,20 +36,19 @@ xaloy.assert = function(xobj)
 		return
 	end
 	xobj.result.ASSERT_RESULT = {}
-	for i, v in ipairs(xobj.case) do
-		xobj.result.ASSERT_RESULT[idx] = xaloy.core.assert(v.mode, v.f, v.cases, v.rs)
+	for i, v in ipairs(xobj.xcases) do
+		xobj.result.ASSERT_RESULT[idx] = xaloy.core.assert(v.mode, v.f, v.cases, v.expect)
 	end	
 end
 
 xaloy.performance = function(xobj)
-	local idx = 1
 	-- check object type
 	if not xaloy.core.checkobj(xobj, "performance")
 		return
 	end
 	xobj.result.PERFORMANCE_RESULT = {}
-	for i, v in ipairs(xobj.case) do
-		xobj.result.PERFORMANCE_RESULT[idx] = xaloy.core.performance(v.f, v.cycle, v.lim_t, v.lim_s)
+	for i, v in ipairs(xobj.xcases) do
+		xobj.result.PERFORMANCE_RESULT[i] = xaloy.core.performance(v.f, v.cycle, v.ltime, v.lspace)
 	end	
 end
 
@@ -62,7 +56,7 @@ xaloy.printHTML = function(xobj)
 	if xobj.finished ~= true then
 		print("cannot create the HTML file because the xaloy test object is unfinished")
 	else
-		xaloy.core.createHTML(xobj.case, xobj.result)
+		xaloy.core.createHTML(xobj.result)
 	end	
 end
 

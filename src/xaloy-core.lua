@@ -5,20 +5,28 @@
 --]]
 
 local xcore = {}
-
+local op_reference = {EQ ="EQ", NE = "NE", LS = "LS", LE = "LE", GT = "GT", GE = "GE"}
 -- initalize the core modules
 xcore.bind = require("xaloy-core-bind")
 xcore.env = require("xaloy-core-env")
 xcore.log = require("xaloy-core-log")
+xcore.cmp = require("xaloy-core-compare")
 
 -- module's methods
-xcore.build = function(xdef)
+xcore.parseObject = function(xdef)
+	return xcore.bind.parseObject(xdef)
 end
 
-xcore.load= function(xdef)
+xcore.parseFile= function(xdef)
+	return xcore.bind.parseFile(xdef)
 end
 
-xcore.createHTML = function(xcase, xresult)
+xcore.createHTML = function(result)
+	if xresult == nil then 
+		xcore.log.message("cannot create the html file, because of the result is nil")
+		return
+	end
+	xcore.log.html(result)
 end
 
 
@@ -40,10 +48,72 @@ xcore.checkobj = function(xobj, mode)
 	return true
 end
 
-xcore.assert = function(mode, xf, xcase, xresult)
+xcore.assert = function(mode, xf, case, expect)
+	mode = string.upper(mode)
+	local op = op_reference[mode]
+	local idx = ''
+	local msg
+	if op == nil then
+		xcore.log.message("undefined operation")
+		return nil
+	end
+	for i, v in ipairs(case) do		
+		local metafunction = nil
+		local params = nil
+		if _VERSION == "Lua 5.2" then						
+			metafunction = load("return xcore.cmp." .. op .."(xf(unpack(v)), expect[i])")
+		else
+			metafunction = loadstring("return xcore.cmp." .. op .."(xf(unpack(v)), expect[i])")
+		end		
+		
+		if metafunction() ~= true then
+			idx = idx .. i
+		end		
+	end
+	
+	if string.len(idx) > 0 then
+		msg = string.format("Assert Fail. (MODE:%s, Fail Test case Index:%s)", mode, idx)
+		xcore.log.error(msg)
+		return {success = false, message = msg}
+	else
+		msg = string.format("Assert Success,(MODE:%s)", mode)
+		xcore.log.ok(msg)		
+		return {success = true, message = msg}
+	end	
 end
 
-xcore.performance = function(xf, cycle, lim_t, lim_s)
+xcore.performance = function(name, xf, case, cycle, ltime, lspace)
+	local msg
+	if type(case) ~= "table" then
+		msg = "case must be a table"
+		xcore.log.error(msg)
+		return {success = false, message = msg}
+	end
+	local cost = xcore.env.timer(
+		function()
+			for i = 1, cycle do
+				xf(unpack(case))
+			end
+		end
+	)
+	-- if no limits
+	if ltime == nil and lspace == nil then
+		msg = string.format("function:%s   cost time:%d", name, cost)
+		xcore.log.ok(msg)
+		return {success = true, message = msg}		
+	end
+	
+	if type(ltime) == "number" then
+		if cost <= ltime then
+			msg = string.format("function:%s   limit time:%d   cost time:%d, PASS", name, ltime, cost)
+			xcore.log.ok(msg)
+			return {success = true, message = msg}	
+		else
+			msg = string.format("function:%s   limit time:%d   cost time:%d, FAIL", name, ltime, cost)
+			xcore.log.error(msg)
+			return {success = false, message = msg}	
+		end
+	end	
 end
 
 ---------- return xaloy-core module ----------
