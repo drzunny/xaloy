@@ -9,8 +9,8 @@ function minus(a,b)
 end
 
 cases ={
-	{f = plus, mode = "EQ", case={{1,2}, {3,4}}, expect={3,7}, cycle=10},
-	{f = minus , mode = "LS", case={{1,2}, {3,4}}, expect={2,2}, cycle=10}
+	{name ="plus", f = plus, mode = "EQ", case={{1,2}, {3,4}}, expect={3,7}, cycle=10},
+	{name ="min", f = minus , mode = "LS", case={{1,2}, {3,4}}, expect={2,2}, cycle=10}
 }
 tob = xaloy.create("test")
 xaloy.bind(tob, cases)
