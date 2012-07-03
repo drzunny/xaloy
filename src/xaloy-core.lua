@@ -68,11 +68,11 @@ xcore.assert = function(name, mode, xf, case, expect)
 	
 	if string.len(idx) > 0 then
 		idx = string.sub(idx, 0, string.len(idx) - 1)
-		msg = string.format("'" .. name .."' Assert Fail.    (MODE:%s, Fail Test case Index:%s)", mode, idx)
+		msg = string.format("'" .. name .."' Assert Fail.(MODE:%s, Fail Test case Index:%s)", mode, idx)
 		xcore.log.error(msg)
 		return {tname = name, success = false, message = msg}
 	else
-		msg = string.format("'" .. name .."' Assert Success. (MODE:%s)", mode)
+		msg = string.format("'" .. name .."' Assert Success.(MODE:%s)", mode)
 		xcore.log.ok(msg)		
 		return {tname = name, success = true, message = msg}
 	end	
@@ -94,18 +94,18 @@ xcore.performance = function(name, xf, case, cycle, ltime, lspace)
 	)
 	-- if no limits
 	if ltime == nil and lspace == nil then
-		msg = string.format("function:%s   cost time:%d", name, cost)
+		msg = string.format("function:%s   cost time:%f", name, cost)
 		xcore.log.ok(msg)
 		return {tname = name, success = true, message = msg}		
 	end
 	
 	if type(ltime) == "number" then
 		if cost <= ltime then
-			msg = string.format("function:%s   limit time:%d   cost time:%d, PASS", name, ltime, cost)
+			msg = string.format("function:%s   limit time:%f   cost time:%f, PASS", name, ltime, cost)
 			xcore.log.ok(msg)
 			return {tname = name, success = true, message = msg}	
 		else
-			msg = string.format("function:%s   limit time:%d   cost time:%d, FAIL", name, ltime, cost)
+			msg = string.format("function:%s   limit time:%f   cost time:%f, FAIL", name, ltime, cost)
 			xcore.log.error(msg)
 			return {tname = name, success = false, message = msg}	
 		end
