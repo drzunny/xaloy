@@ -50,7 +50,6 @@ end
 
 xcore.assert = function(name, mode, xf, case, expect)
 	mode = string.upper(mode)
-	local op = op_reference[mode]
 	local idx = ''
 	local msg
 	if op == nil then
@@ -59,7 +58,7 @@ xcore.assert = function(name, mode, xf, case, expect)
 	end	
 	for i, v in ipairs(case) do		
 		local cmp_rs = nil	
-		cmp_rs = xcore.cmp[op](xf(unpack(v)), expect[i])	
+		cmp_rs = xcore.cmp[mode](xf(unpack(v)), expect[i])	
 		
 		if cmp_rs ~= true then
 			idx = idx .. i .. ","

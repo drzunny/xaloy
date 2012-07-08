@@ -1,6 +1,9 @@
 #include "xaloytools.h"
 #include <stdio.h>
 #include <time.h>
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 
 #ifdef __WIN32
 #include <windows.h>
@@ -46,32 +49,58 @@ print_color_text(int color, char *text)	{
 #endif
 }
 /*		xaloytools' API		*/
-void
-message(char *msg)	{
+static int
+message(lua_State *L)	{
+	const char *msg = luaL_checkstring(L, 1);
 	print_color_text(COLOR_BLUE, "[MESSAGE]  ");	
 	printf("%s\n", msg);
+	return 0;
 }
 
-void
-debug(char *msg)	{
+static int 
+debug(lua_State *L)	{
+	const char *msg = luaL_checkstring(L, 1);
 	print_color_text(COLOR_YELLOW, "[DEBUG]    ");
 	printf("%s\n", msg);
+	return 0;
 }
 
-void
-error(char *msg)	{
-	print_color_text(COLOR_RED, "[ERROR]    ");
+static int
+fail(lua_State *L)	{
+	const char *msg = luaL_checkstring(L, 1);
+	print_color_text(COLOR_RED, "[FAIL]     ");
 	printf("%s\n", msg);
+	return 0;
 }
 
-void
-ok(char *msg)	{
+static int
+ok(lua_State *L)	{
+	const char *msg = luaL_checkstring(L, 1);
 	print_color_text(COLOR_GREEN, "[OK]       ");
 	printf("%s\n", msg);
+	return 0;
 }
 
-void
-xprint(char *msg)	{
+static int
+xprint(lua_State *L)	{
+	const char *msg = luaL_checkstring(L, 1);
 	printf(msg);
 	printf("\n");
+	return 0;
+}
+
+/*		register into lua		*/
+static const struct luaL_reg xtools[] = 	{
+	{"message", message},
+	{"ok", ok},
+	{"error", error},
+	{"debug", debug},
+	{"xprint", xprint},
+	{NULL, NULL}
+}
+
+int
+luaopen_xtools(lua_State *L)	{
+	luaL_openlib(L, "xtools", xtools, 0);
+	return 1;
 }

@@ -29,6 +29,10 @@ xaloy.bind= function(xobj, xdef)
 	end	
 end
 
+xaloy.expect = function(xobj)
+
+end
+
 xaloy.assert = function(xobj)
 	local idx = 1
 	-- check object type
