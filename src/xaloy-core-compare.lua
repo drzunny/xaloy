@@ -1,1 +1,131 @@
---[[		file	: xaloy-core-compare.lua		author	: drzunny		updated	: 2012-06-30--]]local xcmp = {}-------------- xaloy log module api --------------xcmp.EQ = function(t1, t2)	if type(t1) ~= type(t2) then				return false	else		if type(t1) == "table" then			if #t1 ~= #t2 then				return false			end			for i, v in pairs(t1) do				if xmp.EQ(v, t2[i]) == false then					return false				end							end			return true		else			return math.abs(t1 - t2) < 0.00005		end	end	endxcmp.NE = function(t1, t2)	return not xmp.EQ(t1, t2)endxcmp.LS = function(t1, t2)	if type(t1) ~= type(t2) then				return nil	else		if type(t1) == "table" then			return #t1 < #t2		else			return t1 - t2 < -0.00005		end	end	endxcmp.LE = function(t1, t2)	if type(t1) ~= type(t2) then		return nil	end	return xcmp.EQ(t1, t2) or xmp.LS(t1, t2)endxcmp.GT= function(t1, t2)	if type(t1) ~= type(t2) then		return nil	end	return not xmp.LE(t1, t2)endxcmp.GE = function(t1, t2)	if type(t1) ~= type(t2) then		return nil	end	if xmp.EQ(t1, t2) == true then		return true	end	if type(t1) == "table" then		return #t1 > #t2		else 		return t1 - t2 > 0.00005	endend--------- return xaloy's log module ----------return xcmp
+--[[
+		file	: xaloy-core-compare.lua
+		author	: drzunny
+		updated	: 2012-07-08
+--]]
+
+local xcompare = {}
+-- declare the epsilon for compare
+local __ep = 0.00005
+
+---------- declare the helper functions ----------
+local cmp_helpers = {}
+local check_parameters
+local tb_getlength
+
+---------- define the xcompare's API ----------
+xcompare.EQ = function(v1, v2)
+	local valid, t1, t2 = check_parameters(v1, v2)
+	if not valid then
+		return false
+	end
+	if cmp_helpers[t1 .. "_cmp"] ~= nil then
+		return cmp_helpers[t1 .. "_cmp"](v1,v2) == 0
+	else
+		print("this datatype '" .. t1 .."' is not supported in xaloy")
+		return false
+	end
+end
+
+xcompare.NE = function(v1, v2)
+	return not xcompare.EQ(v1, v2)
+end
+
+xcompare.LS = function(v1, v2)
+	local valid, t1, t2 = check_parameters(v1, v2)
+	if not valid then
+		return false
+	end
+	if cmp_helpers[t1 .. "_cmp"] ~= nil then
+		return cmp_helpers[t1 .. "_cmp"](v1,v2) < 0
+	else
+		print("this datatype '" .. t1 .."' is not supported in xaloy")
+		return false
+	end
+end
+
+xcompare.LE = function(v1, v2)
+	return xcompare.LS(v1,v2) or xcompare.EQ(v1, v2)
+end
+
+xcompare.GT = function(v1, v2)
+	local valid, t1, t2 = check_parameters(v1, v2)
+	if not valid then
+		return false
+	end
+	if cmp_helpers[t1 .. "_cmp"] ~= nil then
+		return cmp_helpers[t1 .. "_cmp"](v1,v2) > 0
+	else
+		print("this datatype '" .. t1 .."' is not supported in xaloy")
+		return false
+	end
+end
+
+xcompare.GE = function(v1, v2)
+	return xcompare.GT(v1,v2) or xcompare.EQ(v1, v2)
+end
+
+---------- implement the helpers ----------
+tb_getlength = function(t)
+	local len = 0
+	for i,_ in pairs(t) do
+		len = len + 1
+	end
+	return len
+end
+
+cmp_helpers.number_cmp = function(v1, v2)
+	if math.abs(v1 - v2) < __ep then
+		return 0
+	elseif v1 - v2 > 0 then
+		return 1
+	else 
+		return -1
+	end
+end
+
+cmp_helpers.string_cmp = function(v1, v2)
+	if v1 == v2 then
+		return 0
+	else
+		local len1 = string.len(v1)
+		local len2 = string.len(v2)
+		if len1 ~= len2 then
+			return (len1 > len2 and 1) or -1
+		else
+			for i = 1, len1 do
+				if string.byte(v1, i) ~= string.byte(v2, i) then
+					return (string.byte(v1, i) > string.byte(v2, i) and 1) or -1
+				end
+			end
+			return 0
+		end
+	end
+end
+
+cmp_helpers.table_cmp = function(v1, v2)
+	local len1 = tb_getlength(v1)
+	local len2 = tb_getlength(v2)
+	if len1 ~= len2 then
+		return (len1 > len2 and 1) or -1
+	else
+		for i, v in pairs(v1) do 
+			if v2[i] == nil then
+				return 2
+			end
+			--- get the same key and its value to compare
+			if type(v1[i]) ~= type(v2[i]) then
+				return 2
+			else
+				local t = type(v1[i])				
+				local cmp_rs = cmp_helpers[t .. "_cmp"](v1, v2)
+				if cmp_rs ~= 0 then
+					return cmp_rs
+				end
+			end			
+		end
+	end
+end
+
+---------- return the xcompare module ----------
+return xcompare
