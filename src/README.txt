@@ -2,7 +2,10 @@ XDEF example:
 --------------------------------------------------------
 require("module")	-- use "require" if you want to test the extern library(created by c/c++ or Lua)
 return {
-	{f = f1, mode = "EQ" case = {{"table", "table"},...}, expect = {number, "or string", "or table"}, cycle = 0, ltime = 0, lspace = 0},
+	{
+		f = f1, mode = "EQ" case = {{"table", "table"},...}, 
+		expect = {number, "or string", "or table"}, cycle = 0, ltime = 0, lspace = 0
+	},
 	....
 }
 
