@@ -12,22 +12,21 @@ local check_result = function(rs)
 	if type(rs) ~= "table" then
 		print("test result must a table")
 		return false
-	else
-		if #rs > 0 then
-			for key,val in pairs(rs) do
-				for i,v in ipairs(val) do
-					if (v.success ~= true and v.success ~= false) or (type(v.msg) ~= "string" or string.len(v.msg) > 0)
-					then
-						print("error result data format")
-						return false
-					end
+	end
+	if #rs > 0 then
+		for key,val in pairs(rs) do
+			for i,v in ipairs(val) do
+				if (v.success ~= true and v.success ~= false) or (type(v.msg) ~= "string" or string.len(v.msg) > 0)
+				then
+					print("error result data format")
+					return false
 				end
 			end
-			return true
-		else
-			print("cannot use a empty result table")
-			return false
 		end
+		return true
+	else
+		print("cannot use a empty result table")
+		return false
 	end
 end
 local output_html = [[

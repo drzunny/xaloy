@@ -1,4 +1,3 @@
-#include "xaloytools.h"
 #include <stdio.h>
 #include <time.h>
 #include <lua.h>
@@ -90,14 +89,15 @@ xprint(lua_State *L)	{
 }
 
 /*		register into lua		*/
-static const struct luaL_reg xtools[] = 	{
+static const 
+struct luaL_Reg xtools[] = {
 	{"message", message},
 	{"ok", ok},
-	{"error", error},
+	{"fail", fail},
 	{"debug", debug},
 	{"xprint", xprint},
 	{NULL, NULL}
-}
+};
 
 int
 luaopen_xtools(lua_State *L)	{
