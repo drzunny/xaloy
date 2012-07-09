@@ -4,8 +4,11 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
-#ifdef __WIN32
+#ifdef OS_WIN32
 #include <windows.h>
+#define XTOOLS_API LUALIB_API __declspec(dllexport)
+#else
+#define XTOOLS_API
 #endif
 
 /*		macro declaration		*/
@@ -22,7 +25,7 @@ enum PRINT_COLOR{
 /*		xaloytools helper		*/
 static void 
 print_color_text(int color, char *text)	{
-#ifdef __WIN32
+#ifdef OS_WIN32
 	WORD colorOld;
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -99,8 +102,13 @@ struct luaL_Reg xtools[] = {
 	{NULL, NULL}
 };
 
-int
+XTOOLS_API int
 luaopen_xtools(lua_State *L)	{
-	luaL_openlib(L, "xtools", xtools, 0);
+	lua_register(L, "message", message);
+	lua_register(L, "ok", ok);
+	lua_register(L, "fail", fail);
+	lua_register(L, "debug", debug);
+	lua_register(L, "xprint", xprint);
+	
 	return 1;
 }

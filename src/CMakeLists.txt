@@ -1,8 +1,12 @@
 PROJECT(XTOOLS)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-SET(LUA_DIR "E:\\codes\\other\\library\\include")
-SET(LUA_LIB "E:\\codes\\other\\library\\lib\\liblua.a")
+IF(WIN32)
+	ADD_DEFINITIONS(-DOS_WIN32)
+ENDIF()
+
+SET(LUA_DIR "../lib/lua/include/")
+SET(LUA_LIB "../lib/lua/liblua.a")
 
 INCLUDE_DIRECTORIES(${LUA_DIR})
 ADD_LIBRARY(xtools SHARED xaloytools.c)
