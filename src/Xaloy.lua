@@ -11,8 +11,8 @@ local xtest = require("xaloy-test")
 xaloy = {}
 xaloy.prototype = {
 	name = "", f = function() end, case = {}, 
-	expect = {}, cycle = 0, ltime = 0, 
-	lspace = 0, success = false
+	expect = {}, cycle = 0, ltime = 0,
+	success = false,
 	expect = function() end,
 	assert = function() end,
 	performance = function() end,
@@ -32,11 +32,18 @@ xaloy.new = function(name, case)
 end
 
 -- normal test function
-xaloy.expect = function(name, mode, ev, actual)
+xaloy.expect = function(name, mode, expect, actual)
+	xcore.expect(name, mode ,actual, expect)
 end
 
-xaloy.assert = function(name, mode, ev, actual)
+xaloy.assert = function(name, mode, expect, actual)
+	xcore.assert(name, mode ,actual, expect)
 end
 
-xaloy.performance = function(name, f, cycle, ltime, lspace)
+xaloy.performance = function(name, f, cycle, ltime)
+	xcore.performance(name, f, cycle, ltime)
+end
+
+xaloy.printHTML = function(name)
+	xcore.html(name)
 end

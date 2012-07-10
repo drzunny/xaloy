@@ -46,10 +46,18 @@ xenv.searchcmd = function(cmd)
 	return false
 end
 
-xenv.timer = function(callback)
+xenv.timer = function(callback, cycle)
 	local tick = os.clock()
 	callback()
 	tick = os.clock() - tick
+	if type(cycle) == "number" and cycle > 0 then
+		local calc = os.clock()
+		for i = 1, cycle do
+			callback()
+		end
+		calc = os.clock() - calc
+		return tick, calc
+	end
 	return tick
 end
 

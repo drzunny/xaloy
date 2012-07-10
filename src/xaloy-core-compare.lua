@@ -45,7 +45,11 @@ xcompare.LS = function(v1, v2)
 end
 
 xcompare.LE = function(v1, v2)
-	return xcompare.LS(v1,v2) or xcompare.EQ(v1, v2)
+	if xcompare.LS(v1,v2) or xcompare.EQ(v1, v2) then
+		return true
+	else
+		return false
+	end
 end
 
 xcompare.GT = function(v1, v2)

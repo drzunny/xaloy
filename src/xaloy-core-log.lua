@@ -31,6 +31,7 @@ local check_result = function(rs)
 	if itemcnt > 0 then
 		return true
 	else
+		print(itemcnt)
 		print("cannot use a empty result table")
 		return false
 	end
