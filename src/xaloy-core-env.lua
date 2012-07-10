@@ -5,10 +5,6 @@
 --]]
 local xenv = {}
 
---------------- global setting varible ---------------
-_LOG_PATH_ = "log\\"
-_HTML_PATH_ = "log\\html\\"
-
 --------------- xaloy-core-env's API ---------------
 xenv.checkfile = function(path)
 	local f = io.open(path)

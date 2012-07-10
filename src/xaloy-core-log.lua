@@ -6,6 +6,10 @@
 require("xtools")
 local xlog = {}
 
+--------------- global setting varible ---------------
+_LOG_PATH_ = "log\\"
+_HTML_PATH_ = "log\\html\\"
+
 ---------- helper function's declarations ----------
 local debugger = {}
 local check_result = function(rs)
@@ -13,22 +17,25 @@ local check_result = function(rs)
 		print("test result must a table")
 		return false
 	end
-	if #rs > 0 then
-		for key,val in pairs(rs) do
-			for i,v in ipairs(val) do
-				if (v.success ~= true and v.success ~= false) or (type(v.msg) ~= "string" or string.len(v.msg) > 0)
-				then
-					print("error result data format")
-					return false
-				end
+	local itemcnt = 0
+	for key,val in pairs(rs) do
+		for i,v in ipairs(val) do
+			if type(v.success) ~= "boolean" or (type(v.msg) ~= "string" or string.len(v.msg) <= 0)
+			then
+				print("error result data format")
+				return false
 			end
 		end
+		itemcnt = itemcnt + 1
+	end
+	if itemcnt > 0 then
 		return true
 	else
 		print("cannot use a empty result table")
 		return false
 	end
 end
+
 local output_html = [[
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -42,6 +49,7 @@ local output_html = [[
 		dt{font-size:30px; font-weight: bold;margin-top:10px; margin-bottom: 10px}	
 		span.s_icon{font-size:30px;color:green}
 		span.f_icon{font-size:30px;color:red}
+		.bottom{font-size:15px; padding-top:10px;padding-bottom:5px;border-top:1px solid #666;text-align:right;font-weight:bold;margin-top:50px}
 	</style>
 </head>
 <body>
@@ -50,6 +58,7 @@ local output_html = [[
 		<dl>
 			{#content}
 		</dl>
+		<div class="bottom">Create By Xaloy</div>
 	</div>
 </body>
 </html>
@@ -187,7 +196,7 @@ debugger.gethtml = function(name,result)
 	for key, val in pairs(result) do
 		rs_str = rs_str .. string.format("<dt>%s</dt>", key)
 		for i,v in ipairs(val) do
-			rs_str = rs_str .. string.format("<dd><span class='%s_icon'>●</span>　　'%s/dd>", (v.success and "s") or "f", v.msg)
+			rs_str = rs_str .. string.format("<dd><span class='%s_icon'>●</span>　　'%s</dd>", (v.success and "s") or "f", v.msg)
 		end
 	end
 	
