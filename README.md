@@ -1,15 +1,26 @@
 Xaloy Test Framework
 =====
-Xaloy测试框架是为Quab而设的一款C/C++类库的自动化测试工具。致力于简化Quab的测试流程。
+Xaloy测试框架是为Quab而设的一款用于Lua或者C/C++类库的自动化测试工具。致力于简化Quab的测试流程。
 
 希望Xaloy以后能够成为一款通用的测试工具～
 
 Xaloy的将会使用到下面的开源库
 
 + lua 5.2
-+ google test framework
++ luajit 2.0 beta 10
 + swig
 
 但是Xaloy **不会** 在这里的源码里面提供这些库
 
 请自行下载并编译后，将头文件和库文件放进lib的文件夹里面～谢谢合作
+
+
+# 如何测试C/C++的函数
+=========
+将需要测试的模块或者接口，编译为Lua扩展的dll或者so。就能够使用Xaloy进行测试
+
+如果对于不太复杂的函数，可以用swig直接进行包装成拓展库，编译后即可
+
+一旦数据结构更比较复杂的情况下，建议还是手动编写binding
+
+此外，xaloy支持使用luajit进行编译. 所以如果在使用luajit的情况下，使用ffi进行绑定是一个适合的做法
