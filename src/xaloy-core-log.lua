@@ -76,24 +76,29 @@ xlog.write = function(text, no_time)
 end
 
 xlog.debug = function(obj)
-	xdebug("The object's value is:")
-	local str = debugger.debug_data(obj)
-	str = "[DEBUG]      | The object's value is:\n" .. str
-	xlog.write(str, true)	
+	debug("The object's value is:")
+	local suc, msg = debugger.debug_data(obj)
+	if suc ~= true then
+		message("cannot debug this object:" .. msg)
+		return
+	end
+	print(msg)
+	msg = "[DEBUG]      | The object's value is:\n" .. msg	
+	xlog.write(msg, true)	
 end
 
 xlog.fail = function(msg ,...)
-	xfail(string.format(msg, ...))
+	fail(string.format(msg, ...))
 	xlog.write("[ERROR]    "..string.format(msg, ...))
 end
 
 xlog.ok = function(msg, ...)
-	xok(string.format(msg, ...))
+	ok(string.format(msg, ...))
 	xlog.write("[OK]       "..string.format(msg, ...))
 end
 
 xlog.message = function(msg, ...)
-	xmessage(string.format(msg, ...))	
+	message(string.format(msg, ...))	
 	xlog.write("[MESSAGE]  "..string.format(msg, ...))
 end
 
@@ -131,18 +136,14 @@ debugger.debug_data = function(obj)
 	local t = type(obj)
 	local dbg_rs
 	if t == "nil" then
-		print("cannot debug a nil object")
 		return false, "cannot debug a nil object"
 	end
 	if t == "string" or t == "number" then
-		print(obj)
 		return true, tostring(obj)
 	elseif t == "table" then
 		dbg_rs = debugger.debug_table(obj)
-		print(dbg_rs.message)
 		return dbg_rs.success, dbg_rs.message
-	elseif
-		print(string.format("this type '%s' is not supported in xaloy", t))
+	else
 		return false, string.format("this type '%s' is not supported in xaloy", t)
 	end
 end
@@ -151,15 +152,27 @@ debugger.debug_table = function(data, prefix)
 	if prefix == nil then
 		prefix = ''
 	end	
+	local val_str
+	local dmsg  = ''
 	-- print object
 	for i, v in pairs(data) do				
-		if type(v) == "string" or type(v) == "number" then
-			print(string.format("%s'%s' = %s", prefix, tostring(i), tostring(v)))
+		if type(v) == "number" then
+			val_str = string.format("%s[%s] = %s", prefix, tostring(i), tostring(v))
+			dmsg = dmsg .. val_str .. '\n'
+		elseif type(v) == "string" then
+			val_str = string.format("%s[%s] = \"%s\"", prefix, tostring(i), tostring(v))
+			dmsg = dmsg .. val_str .. '\n'
+		elseif type(v) == "table" then
+			local rs = debugger.debug_table(v, prefix..'\t')
+			if rs.success ~= true then
+				return rs
+			end
+			dmsg = dmsg .. prefix .."["..i.."] elements:\n" .. rs.message
 		else
-			print(prefix.."'"..i.."' elements:")
-			printdata(v, prefix..'\t')
+			return {success = false, message = "in key:" .. i .. "  this type is not supported now"}
 		end
 	end
+	return {success = true, message = dmsg}
 end
 
 debugger.gethtml = function(name,result)
