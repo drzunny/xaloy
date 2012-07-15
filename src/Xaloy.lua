@@ -10,14 +10,15 @@ local xtest = require("xaloy-test")
 --	declare a global xaloy class
 xaloy = {}
 xaloy.prototype = {
-	name = "", f = function() end, case = {}, 
+	name = "", mode = "EQ", 
+	f = function() end, case = {},
 	expect = {}, cycle = 0, ltime = 0,
 	success = false,
-	expect = function() end,
-	assert = function() end,
-	performance = function() end,
-	expect_eq_str = function() end,
-	assert_eq_str = function() end
+	expect = xtest.expect,
+	assert = xtest.assert,
+	performance = xtest.performance,
+	printHTML = xtest.printHTML,
+	result = {}
 }
 
 -- set xaloy's metatable
