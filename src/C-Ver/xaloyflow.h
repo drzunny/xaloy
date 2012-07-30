@@ -4,6 +4,24 @@
 #include <vector>
 struct xtestflow;
 
+/*	define the macro for using the xaloytester	*/
+#define XALOY_TEST_MODULE(name, statement)	\
+	static int (name)##Init();	\
+	class (name):public xaloy::XaloyFlow	{	\
+	private:	\
+		static int __init = (name)##Init();	\
+	public:	\
+		virtual void run()	{	\
+			(statement)	\
+		}		\
+	};	\
+	static int \
+	(name)##Init()	{	\
+		(name) *xcase = new (name)();	\
+		GLOBAL_TEST.push(#name, xcase);	\
+		return 0;	\
+	}	\
+
 namespace xaloy
 {
 	class XaloyFlow

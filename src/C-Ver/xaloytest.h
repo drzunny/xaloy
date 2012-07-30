@@ -1,6 +1,7 @@
 #ifndef XALOYTEST_H
 #define XALOYTEST_H
 
+#include <stddef.h>
 
 #define	XL_EQUAL			0
 #define	XL_NOT_EQUAL		1
@@ -18,25 +19,15 @@ namespace xaloy
 	public:
 		// assert and expect test
 		template<typename T>
-		static bool Assert(int cmpType, const T &actual, const T &expect);
-		
+		static bool Assert(int cmpType, const T &actual, const T &expect);		
 		template<typename T>
 		static bool Expect(int cmpType, const T &actual, const T &expect);
+		static bool Assert(int cmpType, const char *actual, const char *expect);		
+		static bool Expect(int cmpType, const char *actual, const char *expect);
+		static bool Assert(int cmpType, const wchar_t *actual, const wchar_t *expect);		
+		static bool Expect(int cmpType, const wchar_t *actual, const wchar_t *expect);	
 		
-		static bool Assert_string(int cmpType, const char *actual, const char *expect);
-		
-		static bool Expect_string(int cmpType, const char *actual, const char *expect);
-		
-		static bool Assert_ustring(int cmpType, const wchar_t *actual, const wchar_t *expect);
-		
-		static bool Expect_ustring(int cmpType, const wchar_t *actual, const wchar_t *expect);
-		
-		static bool Assert_pointer(int cmpType, const void *actual, const void *expect);
-		
-		static bool Expect_pointer(int cmpType, const void *actual, const void *expect);
-		
-		static bool Assert_bytes(int cmpType, const char *actual, size_t sz_1, const char *expect, size_t sz_2);
-		
+		static bool Assert_bytes(int cmpType, const char *actual, size_t sz_1, const char *expect, size_t sz_2);		
 		static bool Expect_bytes(int cmpType, const char *actual, size_t sz_1, const char *expect, size_t sz_2);
 		
 		// performance test
