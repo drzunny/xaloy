@@ -4,8 +4,8 @@
 #ifdef _cplusplus
 extern "C"	{
 #endif
+#include "xaloyflow.h"
 #include "xaloytest.h"
-#include "xaloymachine.h"
 #ifdef _cplusplus
 }
 #endif
