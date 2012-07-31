@@ -10,7 +10,7 @@
 #define	XL_LESS_EQUAL		4
 #define	XL_GREATER_EQUAL	5
 
-#define DEFINE_XALOY_FUNCTION(fname)	static void (fname)##()
+#define DEFINE_XALOY_FUNCTION(fname)	static void (fname)()
 
 typedef void (*xl_function)();
 typedef char* xl_message;
@@ -30,10 +30,19 @@ namespace xaloy
 		
 	public:
 		// assert and expect test
-		template<typename T>
-		static void Assert(int cmpType, const T &actual, const T &expect);		
-		template<typename T>
-		static bool Expect(int cmpType, const T &actual, const T &expect);
+		static void Assert(int cmpType, const int &actual, const int &expect);		
+		static bool Expect(int cmpType, const int &actual, const int &expect);
+		static void Assert(int cmpType, const long &actual, const long &expect);		
+		static bool Expect(int cmpType, const long &actual, const long &expect);
+		static void Assert(int cmpType, const short &actual, const short &expect);		
+		static bool Expect(int cmpType, const short &actual, const short &expect);
+		static void Assert(int cmpType, const char &actual, const char &expect);		
+		static bool Expect(int cmpType, const char &actual, const char &expect);
+		static void Assert(int cmpType, const float &actual, const float &expect);		
+		static bool Expect(int cmpType, const float &actual, const float &expect);
+		static void Assert(int cmpType, const double &actual, const double &expect);		
+		static bool Expect(int cmpType, const double &actual, const double &expect);
+		
 		static void Assert_str(int cmpType, const xl_message actual, const xl_message expect);		
 		static bool Expect_str(int cmpType, const xl_message actual, const xl_message expect);
 		static void Assert_str(int cmpType, const xl_umessage actual, const xl_umessage expect);		

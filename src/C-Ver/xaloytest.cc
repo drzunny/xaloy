@@ -1,46 +1,11 @@
 #include "xaloytest.h"
+#include "xaloyprinter.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 using namespace std;
 using namespace xaloy;
-
-enum PRINT_COLOR{
-	COLOR_GREEN = 10,
-	COLOR_BLUE = 11,
-	COLOR_RED = 12,
-	COLOR_YELLOW = 14
-};
-
-// functions for printing the result on console
-static void 
-print_color_text(int color, char *text)	{
-#ifdef OS_WIN32
-	WORD colorOld;
-	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	GetConsoleScreenBufferInfo(handle, &csbi);
-	colorOld = csbi.wAttributes;
-	SetConsoleTextAttribute(handle, (WORD)color);
-	printf(text);
-	SetConsoleTextAttribute(handle, colorOld);
-#else
-	switch(color)
-	{
-	case COLOR_BLUE:
-		printf("\033[33m%s\033[0m", text);
-	case COLOR_GREEN:
-		printf("\033[32m%s\033[0m", text);
-	case COLOR_RED:
-		printf("\033[31m%s\033[0m", text);
-	case COLOR_YELLOW:
-		printf("\033[34m%s\033[0m", text);
-	default:
-		return;
-	}
-#endif
-}
 
 // the private helper functions
 template<typename T>
@@ -187,8 +152,55 @@ bool XaloyTester::_compare_byte(int cmpType, char **msg,
 }
 
 // implement the template functions
-template<typename T>
-void XaloyTester::Assert(int cmpType, const T &actual, const T &expect)	{
+void XaloyTester::Assert(int cmpType, const int &actual, const int &expect)	{
+	char *msg = NULL;
+	bool result = _compare(cmpType, &msg, actual, expect);	
+	// print message
+	if(result)
+		print_color_text(COLOR_GREEN, "[SUCCESS]");
+	else
+		print_color_text(COLOR_RED, "[FAIL]   ");
+	printf("%s\n", msg);
+	if(!result)
+		exit(0);
+}
+bool XaloyTester::Expect(int cmpType, const int &actual, const int &expect)	{
+	char *msg = NULL;
+	bool result = _compare(cmpType, &msg, actual, expect);
+	// print message
+	if(result)
+		print_color_text(COLOR_GREEN, "[SUCCESS]");
+	else
+		print_color_text(COLOR_RED, "[FAIL]   ");
+	printf("%s\n", msg);
+	return result;
+}
+
+void XaloyTester::Assert(int cmpType, const long &actual, const long &expect)	{
+	char *msg = NULL;
+	bool result = _compare(cmpType, &msg, actual, expect);	
+	// print message
+	if(result)
+		print_color_text(COLOR_GREEN, "[SUCCESS]");
+	else
+		print_color_text(COLOR_RED, "[FAIL]   ");
+	printf("%s\n", msg);
+	if(!result)
+		exit(0);
+}
+bool XaloyTester::Expect(int cmpType, const long &actual, const long &expect)	{
+	char *msg = NULL;
+	bool result = _compare(cmpType, &msg, actual, expect);
+	// print message
+	if(result)
+		print_color_text(COLOR_GREEN, "[SUCCESS]");
+	else
+		print_color_text(COLOR_RED, "[FAIL]   ");
+	printf("%s\n", msg);
+	return result;
+}
+
+void XaloyTester::Assert(int cmpType, const short &actual, const short &expect)	{
 	char *msg = NULL;
 	bool result = _compare(cmpType, &msg, actual, expect);	
 	// print message
@@ -201,8 +213,7 @@ void XaloyTester::Assert(int cmpType, const T &actual, const T &expect)	{
 		exit(0);
 }
 
-template<typename T>
-bool XaloyTester::Expect(int cmpType, const T &actual, const T &expect)	{
+bool XaloyTester::Expect(int cmpType, const short &actual, const short &expect)	{
 	char *msg = NULL;
 	bool result = _compare(cmpType, &msg, actual, expect);
 	// print message
@@ -214,6 +225,82 @@ bool XaloyTester::Expect(int cmpType, const T &actual, const T &expect)	{
 	return result;
 }
 
+void XaloyTester::Assert(int cmpType, const char &actual, const char &expect)	{
+	char *msg = NULL;
+	bool result = _compare(cmpType, &msg, actual, expect);	
+	// print message
+	if(result)
+		print_color_text(COLOR_GREEN, "[SUCCESS]");
+	else
+		print_color_text(COLOR_RED, "[FAIL]   ");
+	printf("%s\n", msg);
+	if(!result)
+		exit(0);
+}
+
+bool XaloyTester::Expect(int cmpType, const char &actual, const char &expect)	{
+	char *msg = NULL;
+	bool result = _compare(cmpType, &msg, actual, expect);
+	// print message
+	if(result)
+		print_color_text(COLOR_GREEN, "[SUCCESS]");
+	else
+		print_color_text(COLOR_RED, "[FAIL]   ");
+	printf("%s\n", msg);
+	return result;
+}
+
+void XaloyTester::Assert(int cmpType, const float &actual, const float &expect)	{
+	char *msg = NULL;
+	bool result = _compare(cmpType, &msg, actual, expect);	
+	// print message
+	if(result)
+		print_color_text(COLOR_GREEN, "[SUCCESS]");
+	else
+		print_color_text(COLOR_RED, "[FAIL]   ");
+	printf("%s\n", msg);
+	if(!result)
+		exit(0);
+}
+
+bool XaloyTester::Expect(int cmpType, const float &actual, const float &expect)	{
+	char *msg = NULL;
+	bool result = _compare(cmpType, &msg, actual, expect);
+	// print message
+	if(result)
+		print_color_text(COLOR_GREEN, "[SUCCESS]");
+	else
+		print_color_text(COLOR_RED, "[FAIL]   ");
+	printf("%s\n", msg);
+	return result;
+}
+
+void XaloyTester::Assert(int cmpType, const double &actual, const double &expect)	{
+	char *msg = NULL;
+	bool result = _compare(cmpType, &msg, actual, expect);	
+	// print message
+	if(result)
+		print_color_text(COLOR_GREEN, "[SUCCESS]");
+	else
+		print_color_text(COLOR_RED, "[FAIL]   ");
+	printf("%s\n", msg);
+	if(!result)
+		exit(0);
+}
+
+bool XaloyTester::Expect(int cmpType, const double &actual, const double &expect)	{
+	char *msg = NULL;
+	bool result = _compare(cmpType, &msg, actual, expect);
+	// print message
+	if(result)
+		print_color_text(COLOR_GREEN, "[SUCCESS]");
+	else
+		print_color_text(COLOR_RED, "[FAIL]   ");
+	printf("%s\n", msg);
+	return result;
+}
+
+// the implement of assert/expect string
 void XaloyTester::Assert_str(int cmpType, const xl_message actual, const xl_message expect)	{
 	char *msg = NULL;
 	bool result = _compare_str(cmpType, &msg, actual, expect);
@@ -307,11 +394,11 @@ void XaloyTester::Performance(xl_function f, int cycle, double millisecond)	{
 		print_color_text(COLOR_GREEN,"[SUCCESS]");
 		printf("execution time of the test function: %f ms", waste_time);
 		if(millisecond > 0)
-			printf(", less than the limit time: %f ms\n", millisecond);
+			printf("(less than %f ms)\n", millisecond);
 		else printf("\n");
 	}
 	else	{
 		print_color_text(COLOR_RED, "[FAIL]   ");
-		printf("execution time of the test function: %f ms, slower than the limit time %f ms\n", waste_time, millisecond);		
+		printf("execution time of the test function: %f ms(slower than %f ms)\n", waste_time, millisecond);		
 	}
 }
