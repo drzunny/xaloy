@@ -10,28 +10,40 @@
 #define	XL_LESS_EQUAL		4
 #define	XL_GREATER_EQUAL	5
 
+#define DEFINE_XALOY_FUNCTION(fname)	static void (fname)##()
+
 typedef void (*xl_function)();
+typedef char* xl_message;
+typedef wchar_t* xl_umessage;
 
 namespace xaloy	
 {	
 	class XaloyTester
 	{
+	private:
+		// helper functions for compare the values
+		template<typename T>
+		static bool _compare(int cmpType, xl_message *msg, const T &actual, const T &expect);
+		static bool _compare_str(int cmpType, xl_message *msg, const xl_message actual, const xl_message expect);
+		static bool _compare_str(int cmpType, xl_message *msg, const xl_umessage actual, const xl_umessage expect);
+		static bool _compare_byte(int cmpType, char **msg, const char *actual, size_t act_sz, const char *expect, size_t exp_sz);
+		
 	public:
 		// assert and expect test
 		template<typename T>
-		static bool Assert(int cmpType, const T &actual, const T &expect);		
+		static void Assert(int cmpType, const T &actual, const T &expect);		
 		template<typename T>
 		static bool Expect(int cmpType, const T &actual, const T &expect);
-		static bool Assert(int cmpType, const char *actual, const char *expect);		
-		static bool Expect(int cmpType, const char *actual, const char *expect);
-		static bool Assert(int cmpType, const wchar_t *actual, const wchar_t *expect);		
-		static bool Expect(int cmpType, const wchar_t *actual, const wchar_t *expect);	
+		static void Assert_str(int cmpType, const xl_message actual, const xl_message expect);		
+		static bool Expect_str(int cmpType, const xl_message actual, const xl_message expect);
+		static void Assert_str(int cmpType, const xl_umessage actual, const xl_umessage expect);		
+		static bool Expect_str(int cmpType, const xl_umessage actual, const xl_umessage expect);	
 		
-		static bool Assert_bytes(int cmpType, const char *actual, size_t sz_1, const char *expect, size_t sz_2);		
-		static bool Expect_bytes(int cmpType, const char *actual, size_t sz_1, const char *expect, size_t sz_2);
+		static void Assert_bytes(int cmpType, const char *actual, size_t act_sz, const char *expect, size_t exp_sz);		
+		static bool Expect_bytes(int cmpType, const char *actual, size_t act_sz, const char *expect, size_t exp_sz);
 		
 		// performance test
-		static void Performance(xl_function f, int cycle, int &millisecond, int &space);
+		static void Performance(xl_function f, int cycle, double millisecond);
 	};
 }
 

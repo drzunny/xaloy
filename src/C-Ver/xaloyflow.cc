@@ -5,11 +5,6 @@ using namespace xaloy;
 
 typedef std::vector<xtestflow*>::iterator FlowIterator;
 
-struct xtestflow	{
-	const char *xtest_name;
-	XaloyFlow *xtest_case;
-};
-
 int XaloyFlow::execute()	{
 	int result = 0;
 	for(FlowIterator iter = this->_flowList.begin(); iter != this->_flowList.end(); iter++)	{
@@ -18,11 +13,10 @@ int XaloyFlow::execute()	{
 	}
 	return result;
 }
-void XaloyFlow::push(const char *name, XaloyFlow *test)	{
-	xtestflow *flow = (xtestflow*)malloc(sizeof(xtestflow));
-	flow->xtest_name = name;
-	flow->xtest_case = test;
-	this->_flowList.push_back(flow);
+void XaloyFlow::push(xcase_block *block)	{
+	if(block == NULL)
+		return;	
+	this->_flowList.push_back(block);
 }
 
 XaloyFlow::~XaloyFlow()	{
