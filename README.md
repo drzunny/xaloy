@@ -17,10 +17,6 @@ Xaloy的将会使用到下面的开源库
 
 # 如何测试C/C++的函数
 =========
-将需要测试的模块或者接口，编译为Lua扩展的dll或者so。就能够使用Xaloy进行测试
+可以自写Lua wrapper或者使用swig生成lua Binding的代码。然后用xaloy进行测试。
 
-如果对于不太复杂的函数，可以用swig直接进行包装成拓展库，编译后即可
-
-一旦数据结构更比较复杂的情况下，建议还是手动编写binding
-
-此外，xaloy支持使用luajit进行编译. 所以如果在使用luajit的情况下，使用ffi进行绑定是一个适合的做法
+在xaloy的ver 0.2.0中新增了C++ port，现在可以使用C++ port进行测试。代码在src/C-VER里
