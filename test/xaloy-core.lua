@@ -1,116 +1,92 @@
 --[[
 		file	: xaloy-core.lua
 		author	: drzunny
-		updated	: 2012-06-30
+		updated	: 2012-07-08
 --]]
 
+local xcmp = require("xaloy-core-compare")
+local xlog = require("xaloy-core-log")
+local xenv = require("xaloy-core-env")
 local xcore = {}
-local op_reference = {EQ ="EQ", NE = "NE", LS = "LS", LE = "LE", GT = "GT", GE = "GE"}
--- initalize the core modules
-xcore.env = require("xaloy-core-env")
-xcore.bind = require("xaloy-core-bind")
-xcore.log = require("xaloy-core-log")
-xcore.cmp = require("xaloy-core-compare")
 
--- module's methods
-xcore.parseObject = function(xdef)
-	return xcore.bind.parseObject(xdef)
+-- to save the test result
+xcore.result = {}
+
+-- clear the results
+xcore.clear = function()
+	xcore.result = {}
+	collectgarbage("collect")
 end
 
-xcore.parseFile= function(xdef)
-	return xcore.bind.parseFile(xdef)
-end
-
-xcore.createHTML = function(result)
-	if xresult == nil then 
-		xcore.log.message("cannot create the html file, because of the result is nil")
-		return
+xcore.assert = function(name, mode , actual, expect)
+	local rs = xcore.expect(name, mode, actual, expect)
+	if rs == false then
+		error("In case:'".. name .."' assert fail")		
 	end
-	xcore.log.html(result)
 end
 
-
--- xaloy's core methods
-xcore.checkobj = function(xobj, mode)
-	if type(xobj) ~= "table" then
+xcore.expect = function(name, mode , actual, expect)
+	mode = string.upper(mode)
+	if type(name) ~= "string" or string.len(name) < 1 then
+		error("parameter 'name' must be a string")
 		return false
 	end
-	if mode == "assert" then
-		if xobj.result.ASSERT_RESULT ~= nil then
-			xobj.result.ASSERT_RESULT = nil
-		end
-	elseif mode == "performance" then
-		if xobj.result.PERFORMANCE_RESULT ~= nil then
-			xobj.result.PERFORMANCE_RESULT = nil
-		end
+	if xcmp[mode] == nil then
+		error("The test mode:'" .. mode .."' is not exist")
+		return false
 	end
-	collectgarbage("collect")
-	return true
-end
-
-xcore.assert = function(name, mode, xf, case, expect)
-	mode = string.upper(mode)
-	local op = op_reference[mode]
-	local idx = ''
-	local msg
-	if op == nil then
-		xcore.log.message("undefined operation")
-		return nil
-	end	
-	for i, v in ipairs(case) do		
-		local cmp_rs = nil	
-		cmp_rs = xcore.cmp[op](xf(unpack(v)), expect[i])	
-		
-		if cmp_rs ~= true then
-			idx = idx .. i .. ","
-		end		
+	local cmp_rs = xcmp[mode](actual, expect)
+	-- chech the test case is exist in global result
+	if xcore.result[name] == nil then
+		xcore.result[name] = {}
 	end
-	
-	if string.len(idx) > 0 then
-		idx = string.sub(idx, 0, string.len(idx) - 1)
-		msg = string.format("'" .. name .."' Assert Fail.    (MODE:%s, Fail Test case Index:%s)", mode, idx)
-		xcore.log.error(msg)
-		return {tname = name, success = false, message = msg}
+	if cmp_rs == true then
+		test_msg = "Case '" .. name .. "' run successfuly"
+		xlog.ok(test_msg)		
 	else
-		msg = string.format("'" .. name .."' Assert Success. (MODE:%s)", mode)
-		xcore.log.ok(msg)		
-		return {tname = name, success = true, message = msg}
+		test_msg = "Case '" .. name .. "' has error"
+		xlog.fail(test_msg)				
 	end	
+	table.insert(xcore.result[name], {success = cmp_rs, msg = test_msg })
+	return cmp_rs
 end
 
-xcore.performance = function(name, xf, case, cycle, ltime, lspace)
-	local msg
-	if type(case) ~= "table" then
-		msg = "case must be a table"
-		xcore.log.error(msg)
-		return {tname = name, success = false, message = msg}
-	end
-	local cost = xcore.env.timer(
-		function()
-			for i = 1, cycle do
-				xf(unpack(case))
-			end
-		end
-	)
-	-- if no limits
-	if ltime == nil and lspace == nil then
-		msg = string.format("function:%s   cost time:%f", name, cost)
-		xcore.log.ok(msg)
-		return {tname = name, success = true, message = msg}		
-	end
-	
-	if type(ltime) == "number" then
-		if cost <= ltime then
-			msg = string.format("function:%s   limit time:%f   cost time:%f, PASS", name, ltime, cost)
-			xcore.log.ok(msg)
-			return {tname = name, success = true, message = msg}	
+xcore.performance = function(name, f, cycle, ltime)
+	local _, ticks = xenv.timer(f, cycle)
+	local rs
+	local _msg
+	if type(ltime) == "number" and ltime > 0 then
+		rs = xcmp.LE(ticks, ltime)
+		if rs == true then
+			_msg = string.format("Case :'%s' execute %d cycles cost: %f ms, less than %f ms", 
+					name, cycle, 
+					ticks/1000,  ltime)
+			xlog.ok(_msg)
+			return
 		else
-			msg = string.format("function:%s   limit time:%f   cost time:%f, FAIL", name, ltime, cost)
-			xcore.log.error(msg)
-			return {tname = name, success = false, message = msg}	
-		end
+			_msg = string.format("Case :'%s' execute %d cycles cost: %f ms, slower than %f ms", 
+					name, cycle, 
+					ticks/1000,  ltime)
+			xlog.fail(_msg)
+		end		
+	else
+		rs = true
+		_msg = string.format("Case :'%s' execute %d cycles cost: %f ms", name, cycle, ticks/1000)
+		xlog.ok(_msg)
 	end	
+	if xcore.result[name] == nil then
+		xcore.result[name] = {}
+	end
+	table.insert(xcore.result[name], {success = rs, msg = _msg })
 end
 
----------- return xaloy-core module ----------
+xcore.html = function(name)
+	if type(xcore.result) ~= "table" then
+		error("cannot use a '" .. type(xcore.result) .. "' for creating the html")
+		return
+	end
+	xlog.html(name, xcore.result)
+end
+
+---------- return the xcore module ----------
 return xcore
