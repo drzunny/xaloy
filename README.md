@@ -37,7 +37,7 @@ xaloy的使用方法比较简单，在lua方面，你可以参考下面代码来
   end
   
   function foo2(a,b)
-    return a*b+c;
+    return a*b;
   end
   
   -- create the test case object
