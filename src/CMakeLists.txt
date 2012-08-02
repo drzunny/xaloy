@@ -6,6 +6,8 @@ SET(CMAKE_USE_RELATIVE_PATHS ON)
 
 ADD_SUBDIRECTORY(cpp)
 
+# use your libraries and includes path
+
 SET(LUA_DIR "../lib/include/")
 SET(LUA_LINK_DIR "../lib/")
 IF(MINGW)
