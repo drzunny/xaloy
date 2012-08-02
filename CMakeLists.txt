@@ -1,5 +1,4 @@
-PROJECT(Xaloy)
+PROJECT(xaloy)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-# add source directory
 ADD_SUBDIRECTORY(src)

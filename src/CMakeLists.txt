@@ -1,9 +1,12 @@
-PROJECT(XTOOLS)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-
 IF(WIN32)
 	ADD_DEFINITIONS(-DOS_WIN32)
 ENDIF()
+
+SET(CMAKE_USE_RELATIVE_PATHS ON)
+
+ADD_SUBDIRECTORY(cpp)
+
+# use your libraries and includes path
 
 SET(LUA_DIR "../lib/include/")
 SET(LUA_LINK_DIR "../lib/")
@@ -13,6 +16,7 @@ ELSEIF(MSVC)
 	SET(LUA_LIB "lua.lib")
 ENDIF()
 
+# build the xtools
 INCLUDE_DIRECTORIES(${LUA_DIR})
 LINK_DIRECTORIES(${LUA_LINK_DIR})
 ADD_LIBRARY(xtools SHARED xaloytools.c)
