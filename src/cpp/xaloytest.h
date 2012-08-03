@@ -1,4 +1,4 @@
-#ifndef XALOYTEST_H
+﻿#ifndef XALOYTEST_H
 #define XALOYTEST_H
 
 #include <stddef.h>
@@ -9,6 +9,8 @@
 #define	XL_GREATER			3
 #define	XL_LESS_EQUAL		4
 #define	XL_GREATER_EQUAL	5
+#define XL_ISNULL			6
+#define XL_NOTNULL			7
 
 #define DEFINE_XALOY_FUNCTION(fname)	static void (fname)()
 
@@ -50,6 +52,9 @@ namespace xaloy
 		
 		static void Assert_bytes(int cmpType, const char *actual, size_t act_sz, const char *expect, size_t exp_sz);		
 		static bool Expect_bytes(int cmpType, const char *actual, size_t act_sz, const char *expect, size_t exp_sz);
+		
+		static void Assert_null(int cmpType, const void* ptr);
+		static void Expect_null(int cmpType, const void* ptr);
 		
 		// performance test
 		static void Performance(xl_function f, int cycle, double millisecond);

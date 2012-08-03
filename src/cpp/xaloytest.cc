@@ -402,3 +402,29 @@ void XaloyTester::Performance(xl_function f, int cycle, double millisecond)	{
 		printf("execution time of the test function: %f ms(slower than %f ms)\n", waste_time, millisecond);		
 	}
 }
+
+void XaloyTester::Assert_null(int cmpType, const void* ptr)	{
+	Expect_null(cmpType, ptr);
+	if((ptr == NULL && cmpType == XL_ISNULL) || (ptr != NULL && cmpType == XL_NOTNULL))
+		return;
+	else exit(0);
+}
+
+void XaloyTester::Expect_null(int cmpType, const void* ptr)	{
+	switch(cmpType)
+	{
+	case XL_ISNULL:				
+	case XL_NOTNULL:
+		if((ptr == NULL && cmpType == XL_ISNULL) || (ptr != NULL && cmpType == XL_NOTNULL))
+			print_color_text(COLOR_GREEN, "[SUCCESS]");
+		else
+			print_color_text(COLOR_RED, "[FAIL]   ");
+		if(ptr == NULL)
+			printf("the pointer is null\n");
+		else printf("the pointer is not null\n");
+		break;
+	default:
+		printf("invalid comparision of pointer\n");
+		break;
+	}
+}
