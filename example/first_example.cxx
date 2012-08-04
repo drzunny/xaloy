@@ -10,11 +10,11 @@ DEFINE_XALOY_FUNCTION(sfunc)	{
 }
 
 XALOY_TEST_MODULE(simpletest)	{
-	XaloyTester::Expect(XL_EQUAL, 1, 0);
-	XaloyTester::Expect(XL_LESS, 0, 2);	
-	XaloyTester::Expect(XL_GREATER, 0, 2);	
-	XaloyTester::Expect_str(XL_EQUAL,"Hello world", "Hello world");
-	XaloyTester::Performance(sfunc, 10000, 2000);
+	XALOY_EXPECT(XL_EQUAL, 1, 0);
+	XALOY_EXPECT(XL_LESS, 0, 2);	
+	XALOY_EXPECT(XL_GREATER, 0, 2);	
+	XALOY_EXPECT_STR(XL_EQUAL,"Hello world", "Hello world");
+	XALOY_PERFORMANCE(sfunc, 10000, 2000);
 }
 
 int main(int argc, char **argv)
