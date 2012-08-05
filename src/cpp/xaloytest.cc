@@ -4,29 +4,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 using namespace xaloy;
 
 // static value
 bool XaloyTester::cmp_result = false;
 
+// allow error range
+float XaloyTester::_allowprec = 0.0f; 
+
+void XaloyTester::SetAllowPrec(float allowprec)	{
+	_allowprec = allowprec;
+}
+
 // the private helper functions
 template<typename T>
 bool XaloyTester::_compare(int cmpType, const T &actual, const T &expect)	{
 	bool result = false;
+	float distance = (float)(actual - expect);
 	switch(cmpType)
 	{
 		case XL_EQUAL:
-			if(actual == expect)	{
+			if(fabs(distance) < _allowprec)	{
 				return true;
 			}
 			return false;
 		case XL_NOT_EQUAL:
-			if(actual == expect)	{
+			if(fabs(distance) < _allowprec)	{
 				return false;
 			}
 			return true;
 		case XL_LESS:
-			if(actual < expect)	{
+			if(actual < expect && fabs(distance) > _allowprec)	{
 				return true;
 			}
 			return false;
@@ -36,7 +45,7 @@ bool XaloyTester::_compare(int cmpType, const T &actual, const T &expect)	{
 			}
 			return false;
 		case XL_GREATER:
-			if(actual > expect)	{
+			if(actual > expect && fabs(distance) > _allowprec)	{
 				return true;
 			}
 			return false;
@@ -229,15 +238,15 @@ bool XaloyTester::Performance(xl_function f, int cycle, double millisecond)	{
 	if(waste_time < millisecond || millisecond <= 0)
 	{
 		print_color_text(COLOR_GREEN,"[SUCCESS] ");
-		printf("execution time of the test function: %f ms", waste_time);
+		printf("execution time: %f ms", waste_time);
 		if(millisecond > 0)
-			printf("(less than %f ms)\n", millisecond);
+			printf(", less than %f ms\n", millisecond);
 		else printf("\n");
 		return true;
 	}
 	else	{
 		print_color_text(COLOR_RED, "[FAIL]    ");
-		printf("execution time of the test function: %f ms(slower than %f ms)\n", waste_time, millisecond);		
+		printf("execution time : %f ms, slower than %f ms\n", waste_time, millisecond);		
 		return false;
 	}
 }
