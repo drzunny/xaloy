@@ -35,7 +35,7 @@
 	if(!CMP_RESULT) exit(0)
 	
 #define XALOY_ASSERT_NULL(cmptype, act) \
-	CMP_RESULT = XaloyTester::Compare_null((cmptype), act);\
+	CMP_RESULT = XaloyTester::Compare_null((cmptype), (void*)act);\
 	printf("%s pointer test:(act:%s, exp:%s)\n", #cmptype, #act); \
 	if(!CMP_RESULT) exit(0)
 
@@ -60,7 +60,7 @@
 	
 #define XALOY_EXPECT_NULL(cmptype, act)  \
 	this->_counter++; \
-	CMP_RESULT = XaloyTester::Compare_null((cmptype), act);\
+	CMP_RESULT = XaloyTester::Compare_null((cmptype), (void*)act);\
 	printf("%s pointer test:(act:%s, exp:%s)\n", #cmptype, #act); \
 	if(CMP_RESULT) this->_pass+=1
 
