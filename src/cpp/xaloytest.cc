@@ -25,12 +25,12 @@ bool XaloyTester::_compare(int cmpType, const T &actual, const T &expect)	{
 	switch(cmpType)
 	{
 		case XL_EQUAL:
-			if(fabs(distance) < _allowprec)	{
+			if(fabs(distance) <= _allowprec)	{
 				return true;
 			}
 			return false;
 		case XL_NOT_EQUAL:
-			if(fabs(distance) < _allowprec)	{
+			if(fabs(distance) <= _allowprec)	{
 				return false;
 			}
 			return true;
