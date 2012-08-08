@@ -22,21 +22,25 @@
 #define XALOY_ASSERT(cmptype, act, exp) \
 	CMP_RESULT = XaloyTester::Compare((cmptype), (act), (exp));	\
 	printf("%s test:(actual:%s, expect:%s)\n", #cmptype, #act, #exp); \
+	if(!CMP_RESULT) {printf("Assert Error!\n");getchar();}	\
 	if(!CMP_RESULT) exit(0)
 
 #define XALOY_ASSERT_STR(cmptype, act, exp) \
 	CMP_RESULT = XaloyTester::Compare_str((cmptype), (act), (exp)); \
 	printf("string %s test:(act:%s, exp:%s)\n", #cmptype, #act, #exp); \
+	if(!CMP_RESULT) {printf("Assert Error!\n");getchar();}	\
 	if(!CMP_RESULT) exit(0)
 	
 #define XALOY_ASSERT_BYTE(cmptype, act, asz, exp, esz) \
 	CMP_RESULT = XaloyTester::Compare_bytes((cmptype),(act),(asz),(exp),(esz)); \
 	printf("bytes %s test:(act:%s, exp:%s)\n", #cmptype, #act, #exp); \
+	if(!CMP_RESULT) {printf("Assert Error!\n");getchar();}	\
 	if(!CMP_RESULT) exit(0)
 	
 #define XALOY_ASSERT_NULL(cmptype, act) \
 	CMP_RESULT = XaloyTester::Compare_null((cmptype), (void*)act);\
-	printf("%s pointer test:(act:%s, exp:%s)\n", #cmptype, #act); \
+	printf("pointer test:(act:%s, exp:%s)\n", #act, #cmptype); \
+	if(!CMP_RESULT) {printf("Assert Error!\n");getchar();}	\
 	if(!CMP_RESULT) exit(0)
 
 // Expect API
@@ -61,7 +65,7 @@
 #define XALOY_EXPECT_NULL(cmptype, act)  \
 	this->_counter++; \
 	CMP_RESULT = XaloyTester::Compare_null((cmptype), (void*)act);\
-	printf("%s pointer test:(act:%s, exp:%s)\n", #cmptype, #act); \
+	printf("pointer test:(act:%s, exp:%s)\n", #act, #cmptype); \
 	if(CMP_RESULT) this->_pass+=1
 
 // performance API
