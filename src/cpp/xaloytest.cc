@@ -58,7 +58,7 @@ bool XaloyTester::_compare(int cmpType, const T &actual, const T &expect)	{
 			return false;
 	}
 }
-bool XaloyTester::_compare_str(int cmpType, const xl_message actual, const xl_message expect)	{
+bool XaloyTester::_compare_str(int cmpType, xl_message actual, xl_message expect)	{
 	int actStrlen, expStrlen, result;
 	// pre-compare the actual value and expect
 	actStrlen = strlen(actual);
@@ -84,7 +84,7 @@ bool XaloyTester::_compare_str(int cmpType, const xl_message actual, const xl_me
 			return false;
 	}
 }
-bool XaloyTester::_compare_str(int cmpType, const xl_umessage actual, const xl_umessage expect)	{
+bool XaloyTester::_compare_str(int cmpType, xl_umessage actual, xl_umessage expect)	{
 	int actStrlen, expStrlen, result;
 	// pre-compare the actual value and expect	
 	actStrlen = wcslen(actual);

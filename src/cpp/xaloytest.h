@@ -75,8 +75,8 @@
 	
 	
 typedef void (*xl_function)();
-typedef char* xl_message;
-typedef wchar_t* xl_umessage;
+typedef const char* xl_message;
+typedef const wchar_t* xl_umessage;
 
 namespace xaloy	
 {	
@@ -102,8 +102,8 @@ namespace xaloy
 		static bool Compare(int cmpType, const float &actual, const float &expect);
 		static bool Compare(int cmpType, const double &actual, const double &expect);
 		
-		static bool Compare_str(int cmpType, const xl_message actual, const xl_message expect);
-		static bool Compare_str(int cmpType, const xl_umessage actual, const xl_umessage expect);	
+		static bool Compare_str(int cmpType, xl_message actual, xl_message expect);
+		static bool Compare_str(int cmpType, xl_umessage actual, xl_umessage expect);	
 		
 		static bool Compare_bytes(int cmpType, const char *actual, size_t act_sz, const char *expect, size_t exp_sz);
 		
