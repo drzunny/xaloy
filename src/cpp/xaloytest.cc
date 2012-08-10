@@ -7,6 +7,17 @@
 #include <math.h>
 using namespace xaloy;
 
+// print helper
+static void 
+helper_printmsg(bool result, bool isAssert)	{
+	int color = result? COLOR_GREEN : COLOR_RED;
+	if(isAssert)	{
+		print_color_text(color, result? "[ASSERT SUCCESS] " : "[ASSERT FAIL]    ");
+	} else	{
+		print_color_text(color, result? "[    SUCCESS   ] " : "[    FAIL   ]    ");
+	}
+}
+
 // static value
 bool XaloyTester::cmp_result = false;
 
@@ -133,96 +144,61 @@ bool XaloyTester::_compare_byte(int cmpType,
 }
 
 // implement the template functions
-bool XaloyTester::Compare(int cmpType, const int &actual, const int &expect)	{
+bool XaloyTester::Compare(int cmpType, const int &actual, const int &expect, bool isAssert)	{
 	bool result = _compare(cmpType, actual, expect);
 	// print message
-	if(result)
-		print_color_text(COLOR_GREEN, "[SUCCESS] ");
-	else
-		print_color_text(COLOR_RED, "[FAIL]    ");
+	helper_printmsg(result, isAssert);
 	return result;
 }
 
-bool XaloyTester::Compare(int cmpType, const long &actual, const long &expect)	{
+bool XaloyTester::Compare(int cmpType, const long &actual, const long &expect, bool isAssert)	{
 	bool result = _compare(cmpType, actual, expect);
-	// print message
-	if(result)
-		print_color_text(COLOR_GREEN, "[SUCCESS] ");
-	else
-		print_color_text(COLOR_RED, "[FAIL]    ");
+	helper_printmsg(result, isAssert);
 	return result;
 }
 
-bool XaloyTester::Compare(int cmpType, const short &actual, const short &expect)	{
+bool XaloyTester::Compare(int cmpType, const short &actual, const short &expect, bool isAssert)	{
 	bool result = _compare(cmpType, actual, expect);
-	// print message
-	if(result)
-		print_color_text(COLOR_GREEN, "[SUCCESS] ");
-	else
-		print_color_text(COLOR_RED, "[FAIL]    ");
+	helper_printmsg(result, isAssert);
 	return result;
 }
 
-bool XaloyTester::Compare(int cmpType, const char &actual, const char &expect)	{
+bool XaloyTester::Compare(int cmpType, const char &actual, const char &expect, bool isAssert)	{
 	bool result = _compare(cmpType, actual, expect);
-	// print message
-	if(result)
-		print_color_text(COLOR_GREEN, "[SUCCESS] ");
-	else
-		print_color_text(COLOR_RED, "[FAIL]    ");
+	helper_printmsg(result, isAssert);
 	return result;
 }
 
-bool XaloyTester::Compare(int cmpType, const float &actual, const float &expect)	{
+bool XaloyTester::Compare(int cmpType, const float &actual, const float &expect, bool isAssert)	{
 	bool result = _compare(cmpType, actual, expect);
-	// print message
-	if(result)
-		print_color_text(COLOR_GREEN, "[SUCCESS] ");
-	else
-		print_color_text(COLOR_RED, "[FAIL]    ");
+	helper_printmsg(result, isAssert);
 	return result;
 }
 
-bool XaloyTester::Compare(int cmpType, const double &actual, const double &expect)	{
+bool XaloyTester::Compare(int cmpType, const double &actual, const double &expect, bool isAssert)	{
 	bool result = _compare(cmpType, actual, expect);
-	// print message
-	if(result)
-		print_color_text(COLOR_GREEN, "[SUCCESS] ");
-	else
-		print_color_text(COLOR_RED, "[FAIL]    ");
+	helper_printmsg(result, isAssert);
 	return result;
 }
 
 // the implement of assert/expect string
-bool XaloyTester::Compare_str(int cmpType, const xl_message actual, const xl_message expect)	{
+bool XaloyTester::Compare_str(int cmpType, const xl_message actual, const xl_message expect, bool isAssert)	{
 	bool result = _compare_str(cmpType, actual, expect);
-	
-	// print message
-	if(result)
-		print_color_text(COLOR_GREEN, "[SUCCESS] ");
-	else
-		print_color_text(COLOR_RED, "[FAIL]    ");
+	helper_printmsg(result, isAssert);
 	return result;
 }
 
-bool XaloyTester::Compare_str(int cmpType, const xl_umessage actual, const xl_umessage expect)	{
+bool XaloyTester::Compare_str(int cmpType, const xl_umessage actual, const xl_umessage expect, bool isAssert)	{
 	bool result = _compare_str(cmpType, actual, expect);	
-	// print message
-	if(result)
-		print_color_text(COLOR_GREEN, "[SUCCESS] ");
-	else
-		print_color_text(COLOR_RED, "[FAIL]    ");
+	helper_printmsg(result, isAssert);
 	return result;
 }
 
 bool XaloyTester::Compare_bytes(int cmpType, 
 							   const char *actual, size_t act_sz, 
-							   const char *expect, size_t exp_sz)	{
+							   const char *expect, size_t exp_sz, bool isAssert)	{
 	bool result = _compare_byte(cmpType, actual, act_sz, expect, exp_sz);
-	if(result)
-		print_color_text(COLOR_GREEN, "[SUCCESS] ");
-	else
-		print_color_text(COLOR_RED, "[FAIL]    ");
+	helper_printmsg(result, isAssert);
 	return result;
 }
 
@@ -234,7 +210,7 @@ bool XaloyTester::Performance(xl_function f, int cycle, double millisecond)	{
 	for(int i = 0; i < cycle; i++)
 		f();
 	t2 = clock();
-	waste_time = (double)(t2 - t1)*1000/CLOCKS_PER_SEC;
+	waste_time = (double)(t2 - t1)*1000/CLOCKS_PER_SEC;	
 	if(waste_time < millisecond || millisecond <= 0)
 	{
 		print_color_text(COLOR_GREEN,"[SUCCESS] ");
@@ -251,18 +227,18 @@ bool XaloyTester::Performance(xl_function f, int cycle, double millisecond)	{
 	}
 }
 
-bool XaloyTester::Compare_null(int cmpType, const void* ptr)	{
+bool XaloyTester::Compare_null(int cmpType, const void* ptr, bool isAssert)	{
 	bool result = false;
 	switch(cmpType)
 	{
 	case XL_ISNULL:				
 	case XL_NOTNULL:
 		if((ptr == NULL && cmpType == XL_ISNULL) || (ptr != NULL && cmpType == XL_NOTNULL))	{
-			print_color_text(COLOR_GREEN, "[SUCCESS] ");
+			helper_printmsg(true, isAssert);
 			result = true;
 		}
 		else	{
-			print_color_text(COLOR_RED, "[FAIL]    ");
+			helper_printmsg(false, isAssert);
 			result = false;
 		}
 		break;

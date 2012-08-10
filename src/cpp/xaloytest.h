@@ -20,25 +20,25 @@
 
 // Assert API
 #define XALOY_ASSERT(cmptype, act, exp) \
-	CMP_RESULT = XaloyTester::Compare((cmptype), (act), (exp));	\
+	CMP_RESULT = XaloyTester::Compare((cmptype), (act), (exp), true);	\
 	printf("%s test:(actual:%s, expect:%s)\n", #cmptype, #act, #exp); \
 	if(!CMP_RESULT) {printf("Assert Error!\n");getchar();}	\
 	if(!CMP_RESULT) exit(0)
 
 #define XALOY_ASSERT_STR(cmptype, act, exp) \
-	CMP_RESULT = XaloyTester::Compare_str((cmptype), (act), (exp)); \
+	CMP_RESULT = XaloyTester::Compare_str((cmptype), (act), (exp), true); \
 	printf("string %s test:(act:%s, exp:%s)\n", #cmptype, #act, #exp); \
 	if(!CMP_RESULT) {printf("Assert Error!\n");getchar();}	\
 	if(!CMP_RESULT) exit(0)
 	
 #define XALOY_ASSERT_BYTE(cmptype, act, asz, exp, esz) \
-	CMP_RESULT = XaloyTester::Compare_bytes((cmptype),(act),(asz),(exp),(esz)); \
+	CMP_RESULT = XaloyTester::Compare_bytes((cmptype),(act),(asz),(exp),(esz), true); \
 	printf("bytes %s test:(act:%s, exp:%s)\n", #cmptype, #act, #exp); \
 	if(!CMP_RESULT) {printf("Assert Error!\n");getchar();}	\
 	if(!CMP_RESULT) exit(0)
 	
 #define XALOY_ASSERT_NULL(cmptype, act) \
-	CMP_RESULT = XaloyTester::Compare_null((cmptype), (void*)act);\
+	CMP_RESULT = XaloyTester::Compare_null((cmptype), (void*)act, true);\
 	printf("pointer test:(act:%s, exp:%s)\n", #act, #cmptype); \
 	if(!CMP_RESULT) {printf("Assert Error!\n");getchar();}	\
 	if(!CMP_RESULT) exit(0)
@@ -95,19 +95,19 @@ namespace xaloy
 		
 	public:
 		// assert and expect test
-		static bool Compare(int cmpType, const int &actual, const int &expect);
-		static bool Compare(int cmpType, const long &actual, const long &expect);
-		static bool Compare(int cmpType, const short &actual, const short &expect);
-		static bool Compare(int cmpType, const char &actual, const char &expect);
-		static bool Compare(int cmpType, const float &actual, const float &expect);
-		static bool Compare(int cmpType, const double &actual, const double &expect);
+		static bool Compare(int cmpType, const int &actual, const int &expect, bool isAssert = false);
+		static bool Compare(int cmpType, const long &actual, const long &expect, bool isAssert = false);
+		static bool Compare(int cmpType, const short &actual, const short &expect, bool isAssert = false);
+		static bool Compare(int cmpType, const char &actual, const char &expect, bool isAssert = false);
+		static bool Compare(int cmpType, const float &actual, const float &expect, bool isAssert = false);
+		static bool Compare(int cmpType, const double &actual, const double &expect, bool isAssert = false);
 		
-		static bool Compare_str(int cmpType, xl_message actual, xl_message expect);
-		static bool Compare_str(int cmpType, xl_umessage actual, xl_umessage expect);	
+		static bool Compare_str(int cmpType, xl_message actual, xl_message expect, bool isAssert = false);
+		static bool Compare_str(int cmpType, xl_umessage actual, xl_umessage expect, bool isAssert = false);	
 		
-		static bool Compare_bytes(int cmpType, const char *actual, size_t act_sz, const char *expect, size_t exp_sz);
+		static bool Compare_bytes(int cmpType, const char *actual, size_t act_sz, const char *expect, size_t exp_sz, bool isAssert = false);
 		
-		static bool Compare_null(int cmpType, const void* ptr);
+		static bool Compare_null(int cmpType, const void* ptr, bool isAssert = false);
 		
 		// performance test
 		static bool Performance(xl_function f, int cycle, double millisecond);
