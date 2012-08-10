@@ -1,3 +1,18 @@
+# 2012-08-04
+
+本次是一次重要更新，版本是ver 0.2.1
+
+
+  + 重构了xaloytest模块，合并了assert和expect操作为compare操作
+  + 添加了 “XALOY_*” 系列的宏函数作为xaloy的测试API，取代了原来使用XaloyTester::Assert等
+  + 在GLOBAL_TEST的execute中新增了一个ispager的参数，默认为false，为true时可以分页预览case
+  + 修改了测试输出的文字描述，通过使用宏API可以输出比较时候的表达式和相应的比较操作
+  + 每个case的测试新增了测试的方法数和通过数的统计
+  + 重写了一下cmakelists.txt
+
+        本次属于修复型的更新，0.2.0版本在编译时会有大量的warining。在本次更新中已经解决。
+        并且追加了之前版本中因计划延误等问题而没有加上的一些功能，例如如total和pass的统计
+  
 # 2012-07-31
 
 ##Lua部分

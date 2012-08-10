@@ -19,13 +19,17 @@ print_color_text(int color, const char *text)	{
 	switch(color)
 	{
 	case COLOR_BLUE:
-		printf("\033[33m%s\033[0m", text);
+		printf("\033[34m%s\033[0m", text);
+		break;
 	case COLOR_GREEN:
 		printf("\033[32m%s\033[0m", text);
+		break;
 	case COLOR_RED:
 		printf("\033[31m%s\033[0m", text);
+		break;
 	case COLOR_YELLOW:
-		printf("\033[34m%s\033[0m", text);
+		printf("\033[33m%s\033[0m", text);
+		break;
 	default:
 		return;
 	}

@@ -1,3 +1,6 @@
+PROJECT(xaloy)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
 IF(WIN32)
 	ADD_DEFINITIONS(-DOS_WIN32)
 ENDIF()
@@ -8,16 +11,13 @@ ADD_SUBDIRECTORY(cpp)
 
 # use your libraries and includes path
 
-SET(LUA_DIR "../lib/include/")
-SET(LUA_LINK_DIR "../lib/")
-IF(MINGW)
-	SET(LUA_LIB "liblua.a")
-ELSEIF(MSVC)
-	SET(LUA_LIB "lua.lib")
-ENDIF()
+SET(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib/")
+
+SET(LUA_DIR "${PROJECT_SOURCE_DIR}/../lib/include/")
+SET(LUA_LINK_DIR "${PROJECT_SOURCE_DIR}/../lib/")
 
 # build the xtools
 INCLUDE_DIRECTORIES(${LUA_DIR})
 LINK_DIRECTORIES(${LUA_LINK_DIR})
 ADD_LIBRARY(xtools SHARED xaloytools.c)
-TARGET_LINK_LIBRARIES(xtools ${LUA_LIB})
+TARGET_LINK_LIBRARIES(xtools lua)
