@@ -11,6 +11,8 @@ ADD_SUBDIRECTORY(cpp)
 
 # use your libraries and includes path
 
+SET(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib/")
+
 SET(LUA_DIR "${PROJECT_SOURCE_DIR}/../lib/include/")
 SET(LUA_LINK_DIR "${PROJECT_SOURCE_DIR}/../lib/")
 
