@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#ifndef OS_WIN32
+#include <wchar.h>
+#endif
+
 using namespace xaloy;
 
 // print helper
@@ -126,7 +130,7 @@ bool XaloyTester::_compare_byte(int cmpType,
 								const char *expect, size_t exp_sz)	{
 	bool isEqual = false;
 	if(act_sz == exp_sz)	{
-		for(int i = 0; i < act_sz; i++)	{
+		for(size_t i = 0; i < act_sz; i++)	{
 			isEqual = actual[i] == expect[i];
 			if(!isEqual)
 				break;
