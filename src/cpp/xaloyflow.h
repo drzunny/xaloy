@@ -1,9 +1,6 @@
 #ifndef XALOYFLOW_H
 #define XALOYFLOW_H
 
-#include <vector>
-struct xtestflow;
-
 #define GLOBAL_TEST xaloy::XaloyFlow::Global
 
 /*	define the macro for using the xaloytester	*/
@@ -35,9 +32,7 @@ namespace xaloy
 		static XaloyFlow *Global;
 	protected:
 		int _counter; 
-		int _pass; 
-	private:
-		std::vector<xtestflow*> _flowList;		
+		int _pass; 	
 	};
 }
 
