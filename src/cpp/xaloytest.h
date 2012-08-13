@@ -45,33 +45,33 @@
 
 // Expect API
 #define XALOY_EXPECT(cmptype, act, exp) \
-	this->_counter++; \
+	this->counter++; \
 	CMP_RESULT = XaloyTester::Compare((cmptype), (act), (exp));	\
 	printf("%s test:(actual:%s, expect:%s)\n", #cmptype, #act, #exp); \
-	if(CMP_RESULT) this->_pass+=1
+	if(CMP_RESULT) this->pass+=1
 	
 #define XALOY_EXPECT_STR(cmptype, act, exp) \
-	this->_counter++; \
+	this->counter++; \
 	CMP_RESULT = XaloyTester::Compare_str((cmptype), (act), (exp)); \
 	printf("string %s compare test:(act:%s, exp:%s)\n", #cmptype, #act, #exp); \
-	if(CMP_RESULT) this->_pass+=1
+	if(CMP_RESULT) this->pass+=1
 	
 #define XALOY_EXPECT_BYTE(cmptype, act, asz, exp, esz)  \
-	this->_counter++; \
+	this->counter++; \
 	CMP_RESULT = XaloyTester::Compare_bytes((cmptype),(act),(asz),(exp),(esz)); \
 	printf("bytes %s compare test:(act:%s, exp:%s)\n", #cmptype, #act, #exp); \
-	if(CMP_RESULT) this->_pass+=1
+	if(CMP_RESULT) this->pass+=1
 	
 #define XALOY_EXPECT_NULL(cmptype, act)  \
-	this->_counter++; \
+	this->counter++; \
 	CMP_RESULT = XaloyTester::Compare_null((cmptype), (void*)act);\
 	printf("pointer test:(act:%s, exp:%s)\n", #act, #cmptype); \
-	if(CMP_RESULT) this->_pass+=1
+	if(CMP_RESULT) this->pass+=1
 
 // performance API
 #define XALOY_PERFORMANCE(f, c, ms)	\
-	this->_counter++; \
-	if(XaloyTester::Performance((f), (c), (ms))) this->_pass+=1
+	this->counter++; \
+	if(XaloyTester::Performance((f), (c), (ms))) this->pass+=1
 	
 	
 typedef void (*xl_function)();

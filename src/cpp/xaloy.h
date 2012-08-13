@@ -10,4 +10,7 @@ extern "C"	{
 }
 #endif
 
+// a global variable to control the test flow
+xaloy::XaloyFlow G_XALOY;
+
 #endif

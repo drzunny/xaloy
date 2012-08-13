@@ -2,45 +2,32 @@
 #include "xaloyprinter.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <vector>
 using namespace xaloy;
-
-struct xtestflow	{
-	const char *xtest_name;
-	XaloyFlow *xtest_case;
-};
-
-static std::vector<xtestflow>
-GLOBAL_FLOWLIST;
-
-typedef std::vector<xtestflow>::iterator FlowIterator;
-
-XaloyFlow* XaloyFlow::Global = new XaloyFlow();
+using namespace std;
 
 int XaloyFlow::execute(bool ispager)	{
 	int result = 0;
-	XaloyFlow *tar = NULL;
-	for(FlowIterator iter = GLOBAL_FLOWLIST.begin(); iter != GLOBAL_FLOWLIST.end(); iter++)	{
+	size_t sz = xlist.size();
+	for(size_t i = 0; i < sz; i++)	{
 		print_color_text(COLOR_BLUE, "========== CASE: '");
-		print_color_text(COLOR_BLUE, (*iter).xtest_name);
+		print_color_text(COLOR_BLUE, xlist[i]->cname);
 		print_color_text(COLOR_BLUE, "' start ==========\n\n");		
-		tar = (*iter).xtest_case;
-		tar->run();
-		if(tar->_counter == 0)	{
+		xlist[i]->run();
+		if(xlist[i]->counter == 0)	{
 			print_color_text(COLOR_YELLOW, "\n\n[MESSAGE] ");
 			printf("No test event happened\n");
 		}			
 		else	{
 			print_color_text(COLOR_YELLOW, "\n\nThe result of '");
-			print_color_text(COLOR_YELLOW,  (*iter).xtest_name);
+			print_color_text(COLOR_YELLOW,  xlist[i]->cname);
 			print_color_text(COLOR_YELLOW, "':\n");
-			if(tar->_pass != tar->_counter)	{
+			if(xlist[i]->pass != xlist[i]->counter)	{
 				print_color_text(COLOR_RED, "[FAIL]    ");
 			}
 			else	{
 				print_color_text(COLOR_GREEN, "[SUCCESS] ");
 			}
-			printf("pass %d, total %d\n\n", tar->_pass, tar->_counter);
+			printf("pass %d, total %d\n\n", xlist[i]->pass, xlist[i]->counter);
 		}
 		// if ispager is true
 		if(ispager)	{
@@ -50,15 +37,17 @@ int XaloyFlow::execute(bool ispager)	{
 	}
 	return result;
 }
-void XaloyFlow::push(const char *name , XaloyFlow *xcase)	{
-	xtestflow flow;
-	flow.xtest_name = name;
-	flow.xtest_case = xcase;
-	GLOBAL_FLOWLIST.push_back(flow);
+void XaloyFlow::push(XaloyCase *xc)	{
+	if(xc == NULL)
+		return;
+	xlist.push_back(xc);
 }
 
 XaloyFlow::~XaloyFlow()	{
-	if(GLOBAL_FLOWLIST.size() > 0)	{
-		GLOBAL_FLOWLIST.clear();
+	size_t sz = xlist.size();
+	if(sz > 0)	{
+		for(int i = 0; i < sz; i++)
+			delete xlist[i];
+		xlist.clear();
 	}		
 }
