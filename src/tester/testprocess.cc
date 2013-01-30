@@ -65,6 +65,9 @@ namespace test
                 getchar();
             }
         }
+		printf("All tests have been DONE! Press enter to quit.\n");
+		getchar();
+		return 0;
     }
     void XaloyTestProcess::push(XaloyTestcases *pCase)
     {
