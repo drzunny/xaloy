@@ -23,7 +23,7 @@ namespace test  {
 
         const char *name;
         bool isBenchmark;
-        unsigned counter, pass, error, runCycle, runLimit;
+        unsigned counter, pass, error, runCycle, runLimit, runCost;
     };
 }}
 

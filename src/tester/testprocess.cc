@@ -11,6 +11,7 @@
 #include "testprocess.h"
 
 #include <stdio.h>
+#include <time.h>
 #include <stddef.h>
 #include <queue>
 
@@ -56,7 +57,17 @@ namespace test
         while(!_taskqueue->caseQueue.empty())   {
             current = _taskqueue->caseQueue.front();
             this->_startHeader(current);
-            current->run();
+            if (current->isBenchmark) {
+                clock_t t1, t2;
+                t1 = clock();
+                for (int i = 0; i < current->runCycle; i++) {
+                    current->run();
+                }
+                t2 = clock();
+                current->runCost = (unsigned)((double)(t2 - t1)*1000/CLOCKS_PER_SEC);
+            }   else    {
+                current->run();
+            }
             this->report(current);
             delete current;
             _taskqueue->caseQueue.pop();

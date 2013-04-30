@@ -32,14 +32,24 @@ void TestReporter::caseReportHeader(const XaloyTestcases *pcase)
 
 void TestReporter::caseReport(const XaloyTestcases *pcase)
 {
-    /*      HEADER      */
-    printf("\n--------------------------------------------\n");
-    /*      CONTENT     */
-    printf("Status:");
-    if (pcase->error > 0) {
-        XaloyBasePrinter::print("FAILURE", F_RED, B_ORIGINAL);
+    if (pcase->isBenchmark) {
+        printf("Status:");
+        if (pcase->runCost > pcase->runLimit)   {\
+            XaloyBasePrinter::print("FAILURE", F_RED, B_ORIGINAL);
+        }   else    {
+            XaloyBasePrinter::print("SUCCESS", F_GREEN, B_ORIGINAL);
+        }
+        printf("    Cost:%d ms     Limit:%d ms     Cycles:%d\n\n", pcase->runCost, pcase->runLimit, pcase->runCycle);
     }   else    {
-        XaloyBasePrinter::print("SUCCESS", F_GREEN, B_ORIGINAL);
+        /*      HEADER      */
+        printf("\n--------------------------------------------\n");
+        /*      CONTENT     */
+        printf("Status:");
+        if (pcase->error > 0) {
+            XaloyBasePrinter::print("FAILURE", F_RED, B_ORIGINAL);
+        }   else    {
+            XaloyBasePrinter::print("SUCCESS", F_GREEN, B_ORIGINAL);
+        }
+        printf("   Total:%d    Pass:%d    Error:%d\n\n", pcase->counter, pcase->pass, pcase->error);
     }
-    printf("   Total:%d    Pass:%d    Error:%d\n\n", pcase->counter, pcase->pass, pcase->error);
 }

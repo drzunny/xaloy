@@ -49,12 +49,12 @@ static XaloyTestProcess *GLOBAL_TESTER = XaloyTestProcess::create();
 #define XALOY_BENCHMARK_REGISTER(casename, cycle, limit) \
     class casename##_benchmark____:public XaloyTestcases {\
     private:\
-        static bool initFlag;\
+        static bool _initFlag;\
     public:\
         virtual void run();\
     };\
     static bool casename##Benchmark() {\
-        casename *pcase = new casename(); \
+        casename##_benchmark____ *pcase = new casename##_benchmark____(); \
         pcase->name = #casename; \
         pcase->isBenchmark = true;\
         pcase->runCycle = cycle; \
@@ -62,8 +62,8 @@ static XaloyTestProcess *GLOBAL_TESTER = XaloyTestProcess::create();
         GLOBAL_TESTER->push(pcase); \
         return true; \
     } \
-    bool casename::_initFlag = casename##Benchmark(); \
-    void casename::run()
+    bool casename##_benchmark____::_initFlag = casename##Benchmark(); \
+    void casename##_benchmark____::run()
 
 /*      Test case generator end      */
 
