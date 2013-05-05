@@ -115,11 +115,10 @@ static XaloyTestProcess *GLOBAL_TESTER = XaloyTestProcess::create();
 
 #define XALOY_ASSERT(result) \
         if (!result) { \
-            XaloyBasePrinter::print("\nAssert Happend!\n-----------------\nFile   :  ", F_YELLOW, B_ORIGINAL); \
-            printf("%s\n", __FILE__);   \
-            XaloyBasePrinter::print("LINE   :  ", F_YELLOW, B_ORIGINAL); \
-            printf("%d\n", __LINE__);  \
+            XaloyBasePrinter::print("\nAssert Happend!\n---------------------------------------\n", F_YELLOW, B_ORIGINAL); \
+            printf("File   :  %s\nLine   :  %d\n", __FILE__, __LINE__);   \
             return; \
+            \
         }
 
 #define XALOY_ASSERT_EQUAL(act, exp) \

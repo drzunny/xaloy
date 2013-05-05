@@ -25,6 +25,8 @@ namespace xaloy
     template<typename T>
     bool isEqual(const T a, const T b) { return fabs((double)a - (double)b) <= AllowPrec; }
     template<>
+    bool isEqual(const bool a, const bool b)   { return a == b; }
+    template<>
     bool isEqual(const char *a, const char *b) { return a == NULL || b == NULL ? false:strcmp(a, b) == 0; }    
     template<>
     bool isEqual(const std::string &a, const std::string &b) { return a.compare(b) == 0; }
@@ -33,6 +35,8 @@ namespace xaloy
     template<typename T>
     bool isGreater(const T a, const T b) { return  (double)a - (double)b > AllowPrec; }
     template<>
+    bool isGreater(const bool a, const bool b) { return a && !b; }
+    template<>
     bool isGreater(const char *a, const char *b) { return a == NULL || b == NULL ? false : strcmp(a, b) > 0; }         
     template<>
     bool isGreater(const std::string &a, const std::string &b) { return a.compare(b) > 0; }
@@ -40,13 +44,17 @@ namespace xaloy
     template<typename T>
     bool isGreaterEqual(const T a, const T b) { return  (double)a - (double)b > 0; }
     template<>
-    bool isGreaterEqual(const char *a, const char *b) { return a == NULL | b == NULL ? false : strcmp(a, b) >= 0; }
+    bool isGreaterEqual(const bool a, const bool b) { return a; }
+    template<>
+    bool isGreaterEqual(const char *a, const char *b) { return a == NULL || b == NULL ? false : strcmp(a, b) >= 0; }
     template<>
     bool isGreaterEqual(const std::string &a, const std::string &b) { return a.compare(b) >= 0; }
 
     // Less
     template<typename T>
     bool isLess(const T a, const T b) { return  (double)a - (double)b < -1 * AllowPrec; }
+    template<>
+    bool isLess(const bool a, const bool b) { return !a && b; }
     template<>
     bool isLess(const char *a, const char *b) { return a == NULL || b == NULL ? false : strcmp(a, b) < 0; }         
     template<>
@@ -55,7 +63,9 @@ namespace xaloy
     template<typename T>
     bool isLessEqual(const T a, const T b) { return  (double)a - (double)b < 0; }
     template<>
-    bool isLessEqual(const char *a, const char *b) { return a == NULL | b == NULL ? false : strcmp(a, b) <= 0; }
+    bool isLessEqual(const bool a, const bool b) { return !a; }
+    template<>
+    bool isLessEqual(const char *a, const char *b) { return a == NULL || b == NULL ? false : strcmp(a, b) <= 0; }
     template<>
     bool isLessEqual(const std::string &a, const std::string &b) { return a.compare(b) <= 0; }
 
