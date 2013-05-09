@@ -13,7 +13,7 @@
 #define XALOY_BASE_PRINTER_H
 
 namespace xaloy {
-#ifdef defined(WIN32) || defined(_WIN32) || defined(_WINDOWS)
+#if defined(WIN32) || defined(_WIN32) || defined(_WINDOWS)
     enum    {
         F_RED       = 12,   /*  8 | 4 */
         F_YELLOW    = 14,   /*  8 | 4 | 2 */
